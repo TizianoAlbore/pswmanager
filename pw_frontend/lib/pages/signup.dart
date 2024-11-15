@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Importa Firestore
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../utils/utils.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Istanza di Firestore
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> _signup() async {
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -31,16 +32,8 @@ class _SignupPageState extends State<SignupPage> {
         password: _passwordController.text.trim(),
       );
 
-      // Ottieni l'ID dell'utente
-      String userId = userCredential.user!.uid;
-
-      // Crea un documento nella raccolta "users"
-      await _firestore.collection('users').doc(userId).set({
-        'email': _emailController.text.trim(),
-        'createdAt': FieldValue.serverTimestamp(),
-        // Puoi aggiungere altri campi personalizzati qui
-      });
-
+      // Aggiungi l'utente al database Firestore
+      await addUser(userCredential, _firestore, _emailController);
       // Naviga al dashboard
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {

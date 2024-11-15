@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'pw-manager-mongiello.firebaseapp.com',
     storageBucket: 'pw-manager-mongiello.firebasestorage.app',
   );
+
 }
