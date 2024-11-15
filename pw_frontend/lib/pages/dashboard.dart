@@ -5,7 +5,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Dashboard')),
+      appBar: AppBar(title: const Text('Dashboard')),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
@@ -16,7 +16,7 @@ class DashboardPage extends StatelessWidget {
               (Route<dynamic> route) => false, // Rimuove tutte le pagine dallo stack
             );
           },
-          child: Text('Logout'),
+          child: const Text('Logout'),
         ),
       ),
     );

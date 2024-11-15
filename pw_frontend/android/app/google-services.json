@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1067949980182",
+    "project_id": "pw-manager-mongiello",
+    "storage_bucket": "pw-manager-mongiello.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067949980182:android:a1164910fdef591cb99337",
+        "android_client_info": {
+          "package_name": "com.pwmanager.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgnqDYcm30_wdKhG9gX8wnDXyVqKLegdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

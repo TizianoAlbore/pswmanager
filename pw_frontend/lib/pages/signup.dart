@@ -33,7 +33,7 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       appBar: AppBar(
         // Titolo della barra in alto
-        title: Text('Sign up'),
+        title: const Text('Sign up'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
