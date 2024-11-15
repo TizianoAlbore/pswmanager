@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
-import './login.dart';
 
 class DashboardPage extends StatelessWidget {
+  const DashboardPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // Naviga alla pagina di login rimuovendo tutte le pagine precedenti
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-              (Route<dynamic> route) => false, // Rimuove tutte le pagine dallo stack
-            );
-          },
-          child: const Text('Logout'),
-        ),
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text('Welcome to the Dashboard!'),
       ),
     );
   }
