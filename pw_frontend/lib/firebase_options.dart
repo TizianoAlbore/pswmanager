@@ -3,18 +3,10 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
+  
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
@@ -39,9 +31,8 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDgorC-A4PaY6IAfdm23P9pg6KHvdfGt3c',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY'] ?? 'default_api_key',
     appId: '1:1067949980182:web:420637e8aa56e067b99337',
     messagingSenderId: '1067949980182',
     projectId: 'pw-manager-mongiello',
@@ -49,16 +40,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'pw-manager-mongiello.firebasestorage.app',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBgnqDYcm30_wdKhG9gX8wnDXyVqKLegdE',
+  static  FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY'] ?? 'default_api_key',
     appId: '1:1067949980182:android:a1164910fdef591cb99337',
     messagingSenderId: '1067949980182',
     projectId: 'pw-manager-mongiello',
     storageBucket: 'pw-manager-mongiello.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA46DjcKE4QD7brPGu6J7FQv2Cs9Dd5mPs',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY'] ?? 'default_api_key',
     appId: '1:1067949980182:ios:a787c2a5dcc52894b99337',
     messagingSenderId: '1067949980182',
     projectId: 'pw-manager-mongiello',
@@ -66,8 +57,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.pwFrontend',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA46DjcKE4QD7brPGu6J7FQv2Cs9Dd5mPs',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY'] ?? 'default_api_key',
     appId: '1:1067949980182:ios:a787c2a5dcc52894b99337',
     messagingSenderId: '1067949980182',
     projectId: 'pw-manager-mongiello',
@@ -75,8 +66,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.example.pwFrontend',
   );
 
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDgorC-A4PaY6IAfdm23P9pg6KHvdfGt3c',
+  static FirebaseOptions windows = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_API_KEY'] ?? 'default_api_key',
     appId: '1:1067949980182:web:f8d00587737281deb99337',
     messagingSenderId: '1067949980182',
     projectId: 'pw-manager-mongiello',
