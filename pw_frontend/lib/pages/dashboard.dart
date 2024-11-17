@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pw_frontend/utils/user_utils.dart';
+import 'package:pw_frontend/utils/password_utils.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -60,7 +61,13 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () => passwordController.text = generateRandomPassword(16),
+                ),
+              ),
               obscureText: true,
             ),
             TextField(

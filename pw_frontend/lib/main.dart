@@ -8,10 +8,14 @@ import '../pages/dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+  await dotenv.load(fileName: ".env"); 
+  } catch (e) {
+  throw Exception('Error loading .env file: $e');
+  }
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  options: DefaultFirebaseOptions.currentPlatform,
   );
-  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
