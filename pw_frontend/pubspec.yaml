@@ -40,6 +40,8 @@ dependencies:
   cloud_firestore: ^5.5.0
   flutter_dotenv: ^5.2.1
   crypto: ^3.0.6
+  cryptography: ^2.7.0
+  cryptography_flutter: ^2.3.2
 
 dev_dependencies:
   flutter_test:
