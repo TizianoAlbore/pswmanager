@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+import 'dashboard.dart'; // Imported the dashboard file
+=======
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './pages/login.dart';
 import './pages/signup.dart';
 import '../pages/dashboard.dart';
+>>>>>>> 3800764763dafe12f9e9e5054dabe6e50067955b
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,12 +29,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< HEAD
+      title: 'Password Manager Dashboard',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const PasswordManagerDashboard(), // Set the dashboard as the home page
+      debugShowCheckedModeBanner: false,
+=======
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
       },
+>>>>>>> 3800764763dafe12f9e9e5054dabe6e50067955b
     );
   }
 }
