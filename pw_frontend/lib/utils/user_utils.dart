@@ -13,18 +13,19 @@ Future<void> addUser(userCredential, firestore, emailController, ) async {
 }
 
 //add password to user
-Future<void> addPassword(String title, username, hashedPassword, note, firestore, userId) async{
+Future<void> addPassword(String title, String username, String hashedPassword, String note, String group, firestore, userId) async{
   DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
   //check if user exists
   if (userCollection.exists) {
 
     Map<String, String> password = {
-      "username": username,
-      "password": hashedPassword,
-      "Note": note
+      'username': username,
+      'password': hashedPassword,
+      'Note': note,
+      'group': group,
     };
 
-    if (userCollection['passwords']!.containsKey(title)) {
+    if (!userCollection['passwords']!.containsKey(title)) {
       await firestore.collection('users').doc(userId).update({
         'passwords.$title': password,
     });

@@ -21,6 +21,12 @@ String hashPassword(String password){
   return hashedPassword;
 }
 
+String dehashPassword(String hashedPassword){
+  final bytes = utf8.encode(hashedPassword);
+  final password = sha256.convert(bytes).toString();
+  return password;
+}
+
 // TODO
 //String generateRememberablePassword(){
 //  return rememberablePassword;
