@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../utils/password_utils.dart';
 import '../utils/user_utils.dart';
-    
+import 'package:flutter/services.dart';
+
 class CustomModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
@@ -17,7 +19,10 @@ class _CustomModalState extends State<CustomModal> {
   
   final _formKey = GlobalKey<FormState>();
   bool _passwordVisible = false;
-
+  bool _includeDigits = true;
+  bool _includeSpecialChars = true;
+  bool _includeCapitalLetters = true;
+  
   // Toggles the password show status
   void _toggle() {
     setState(() {
@@ -30,6 +35,7 @@ class _CustomModalState extends State<CustomModal> {
   final TextEditingController noteController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController groupController = TextEditingController();
+  final TextEditingController lengthController = TextEditingController(text: '16');
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +71,10 @@ class _CustomModalState extends State<CustomModal> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.refresh),
-                        onPressed: () => passwordController.text = generatePassword(length: 16, digits: true, specialChars: true, capitalLetters: true),
+                        onPressed: () => passwordController.text = generatePassword(length: lengthController.text.isEmpty ? 16 : int.parse(lengthController.text),
+                                                                                    digits: _includeDigits,
+                                                                                    capitalLetters:  _includeCapitalLetters,
+                                                                                    specialChars: _includeSpecialChars),
                       ),
                       IconButton(
                         icon: Icon(
@@ -85,6 +94,45 @@ class _CustomModalState extends State<CustomModal> {
                   } 
                   return null;
                 }
+              ),
+              Row(
+                children: [
+                  ToggleButtons(
+                    isSelected: [_includeCapitalLetters, _includeSpecialChars, _includeDigits],
+                    onPressed: (int index) {
+                      setState(() {
+                        if (index == 0) {
+                          _includeCapitalLetters = !_includeCapitalLetters;
+                        } else if (index == 1) {
+                          _includeSpecialChars = !_includeSpecialChars;
+                        } else if (index == 2) {
+                          _includeDigits = !_includeDigits;
+                        }
+                      });
+                    },
+                    children: const <Widget>[
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text('Capital Letters'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text('Symbols'),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text('Numbers'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              TextFormField(
+                controller: lengthController,
+                decoration: const InputDecoration(labelText: 'Length'),
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (value) => {int.parse(value) > 50 ? lengthController.text = '50' : null},
               ),
               TextFormField(
                 controller: noteController,
