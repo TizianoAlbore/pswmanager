@@ -56,7 +56,7 @@ class _CustomModalState extends State<CustomModal> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.refresh),
-                      onPressed: () => passwordController.text = generateRandomPassword(16),
+                      onPressed: () => passwordController.text = generatePassword(length: 6, digits: true, specialChars: true, capitalLetters: true),
                     ),
                     IconButton(
                       icon: Icon(
@@ -93,8 +93,7 @@ class _CustomModalState extends State<CustomModal> {
           onPressed: () async {
             // Handle save action
               try {
-                String hashedPassword = hashPassword(passwordController.text);
-                await addPassword(titleController.text, usernameController.text, hashedPassword, noteController.text, groupController.text, widget.firestore, widget.userId);
+                await addPassword(titleController.text, usernameController.text, passwordController.text, noteController.text, groupController.text, widget.firestore, widget.userId);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Password added successfully')),
               );
