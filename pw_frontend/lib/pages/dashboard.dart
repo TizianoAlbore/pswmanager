@@ -64,7 +64,7 @@ class _DashboardPageState extends State<DashboardPage> {
               decoration: InputDecoration(
                 labelText: 'Password',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.refresh),
+                  icon: const Icon(Icons.refresh),
                   onPressed: () => passwordController.text = generateRandomPassword(16),
                 ),
               ),

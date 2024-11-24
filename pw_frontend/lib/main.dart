@@ -5,9 +5,6 @@ import 'dashboard.dart'; // Imported the dashboard file
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import './pages/login.dart';
-import './pages/signup.dart';
-import '../pages/dashboard.dart';
 >>>>>>> 3800764763dafe12f9e9e5054dabe6e50067955b
 
 void main() async {
