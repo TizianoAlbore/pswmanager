@@ -1,17 +1,17 @@
 import 'dart:convert' as convert;
 import 'package:cryptography/cryptography.dart';
-import 'package:crypto/crypto.dart'; // For hashing the password
+import 'package:blockchain_utils/blockchain_utils.dart' as BlockchainUtils; 
 
 class MyEncrypt {
   // Hash function to ensure the key is 256 bits
-  static List<int> hashPassword(String password) {
+  static Future<List<int>> hashPassword(String password) async {
     final bytes = convert.utf8.encode(password);
-    final hashedPassword = sha256.convert(bytes).bytes;
+    final hashedPassword = await BlockchainUtils.RIPEMD256.hash(bytes);
     return hashedPassword;
   }
 
   static Future<String> encrypt(String key, String plaintext) async {
-    final secretKey = SecretKey(hashPassword(key));
+    final secretKey = SecretKey(await hashPassword(key));
     final nonce = AesGcm.with256bits().newNonce();
     final algorithm = AesGcm.with256bits();
 
@@ -27,7 +27,7 @@ class MyEncrypt {
   }
 
   static Future<String> decrypt(String key, String ciphertext) async {
-    final secretKey = SecretKey(hashPassword(key));
+    final secretKey = SecretKey(await hashPassword(key));
     final algorithm = AesGcm.with256bits();
 
     final combined = convert.base64.decode(ciphertext);
