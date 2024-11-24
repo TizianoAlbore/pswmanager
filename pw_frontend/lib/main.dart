@@ -23,18 +23,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
-      title: 'Password Manager Dashboard',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const PasswordManagerDashboard(), // Set the dashboard as the home page
-      debugShowCheckedModeBanner: false,
-=======
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(),
