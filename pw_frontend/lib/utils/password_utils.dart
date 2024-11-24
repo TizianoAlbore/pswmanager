@@ -30,6 +30,7 @@ String generateMemorablePassword({String language = 'en', int length = 12, bool 
   List<String> words = File('dictionaries/$language.txt').readAsLinesSync();
   Random random = Random.secure();
   String password = '';
+  String specialCharset = '!@#\$%^&*()-_=+[]{}\\|;:\'",<>./?';
   while (password.length < length) {
     String word = words[random.nextInt(words.length)];
     word = word[0].toUpperCase() + word.substring(1);
@@ -39,7 +40,7 @@ String generateMemorablePassword({String language = 'en', int length = 12, bool 
     }
   }
   if (specialChars) {
-    password += '!@#\$%^&*()-_=+[]{}\\|;:\'",<>./?';
+    password += specialCharset[random.nextInt(specialCharset.length)];
   }
   return password;
 }
