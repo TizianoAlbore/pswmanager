@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../utils/password_utils.dart';
 import '../utils/user_utils.dart';
@@ -138,9 +137,26 @@ class _CustomModalState extends State<CustomModal> {
                 controller: noteController,
                 decoration: const InputDecoration(labelText: 'Note'),
               ),
-              DropdownMenu(
-                controller: groupController,
-                dropdownMenuEntries: getGroups(widget.firestore, widget.userId),
+              FutureBuilder<List<DropdownMenuItem<String>>>(
+                future: getGroups(widget.firestore, widget.userId),
+                builder: (BuildContext context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return DropdownButtonFormField<String>(
+                      items: snapshot.data,
+                      value: groupController.text,
+                      onChanged: (String? value) {
+                        setState(() {
+                          groupController.text = value!;
+                        });
+                      },
+                      decoration: const InputDecoration(labelText: 'Group'),
+                    );
+                  }
+                },
               ),
             ],
           ),

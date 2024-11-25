@@ -12,15 +12,15 @@ Future<void> addUser(userCredential, firestore, emailController) async {
   });
 }
 
-Future<List<DropdownMenuEntry<String>>> getGroups(FirebaseFirestore firestore, String userId) async {
-  List<DropdownMenuEntry<String>> groups = [];
+Future<List<DropdownMenuItem<String>>> getGroups(FirebaseFirestore firestore, String userId) async {
+  List<DropdownMenuItem<String>> groups = [];
   await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
       data['groups'].forEach((key, value) {
-        groups.add(DropdownMenuEntry<String>(
+        groups.add(DropdownMenuItem<String>(
           value: key,
-          label: key.toString(),
+          child: Text(key),
         ));
       });
     }
