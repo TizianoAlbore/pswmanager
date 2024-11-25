@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'dashboard.dart'; // Imported the dashboard file
-=======
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
->>>>>>> 3800764763dafe12f9e9e5054dabe6e50067955b
+import 'pages/login.dart';
+import 'pages/signup.dart';
+import 'pages/dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +32,6 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
       },
->>>>>>> 3800764763dafe12f9e9e5054dabe6e50067955b
     );
   }
 }
