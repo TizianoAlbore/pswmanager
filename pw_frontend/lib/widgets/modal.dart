@@ -138,9 +138,9 @@ class _CustomModalState extends State<CustomModal> {
                 controller: noteController,
                 decoration: const InputDecoration(labelText: 'Note'),
               ),
-              TextFormField(
+              DropdownMenu(
                 controller: groupController,
-                decoration: const InputDecoration(labelText: 'Group'),
+                dropdownMenuEntries: getGroups(widget.firestore, widget.userId),
               ),
             ],
           ),
@@ -158,7 +158,13 @@ class _CustomModalState extends State<CustomModal> {
             // Handle save action
             if (_formKey.currentState!.validate()) {
               try {
-                await addPassword(titleController.text, usernameController.text, passwordController.text, noteController.text, groupController.text, widget.firestore, widget.userId);
+                await addPassword(titleController.text,
+                                  usernameController.text,
+                                  passwordController.text, 
+                                  noteController.text, 
+                                  groupController.text, 
+                                  widget.firestore, 
+                                  widget.userId);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Password added successfully')),
               );

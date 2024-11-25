@@ -6,7 +6,7 @@ class MyEncrypt {
   // Hash function to ensure the key is 256 bits
   static Future<List<int>> hashPassword(String password) async {
     final bytes = convert.utf8.encode(password);
-    final hashedPassword = await BlockchainUtils.RIPEMD256.hash(bytes);
+    final hashedPassword = BlockchainUtils.RIPEMD256.hash(bytes);
     return hashedPassword;
   }
 
