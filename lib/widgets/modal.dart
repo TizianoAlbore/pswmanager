@@ -145,9 +145,10 @@ class _CustomModalState extends State<CustomModal> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
+                    List<DropdownMenuItem<String>> items = snapshot.data ?? [];
                     return DropdownButtonFormField<String>(
-                      items: snapshot.data,
-                      value: groupController.text,
+                      items: items,
+                      value: items.isNotEmpty ? items[0].value : null,
                       onChanged: (String? value) {
                         setState(() {
                           groupController.text = value!;
@@ -158,7 +159,7 @@ class _CustomModalState extends State<CustomModal> {
                   }
                 },
               ),
-            ],
+            ],  
           ),
         ),
       ),
@@ -171,33 +172,31 @@ class _CustomModalState extends State<CustomModal> {
         ),
         TextButton(
           onPressed: () async {
-            // Handle save action
             if (_formKey.currentState!.validate()) {
               try {
-                await addPassword(titleController.text,
-                                  usernameController.text,
-                                  passwordController.text, 
-                                  noteController.text, 
-                                  groupController.text, 
-                                  widget.firestore, 
-                                  widget.userId);
+                await addPassword(
+                  titleController.text,
+                  usernameController.text,
+                  passwordController.text, //TODO encrypt password
+                  noteController.text,
+                  groupController.text,
+                  widget.firestore,
+                  widget.userId,
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Password added successfully')),
-              );
-              titleController.clear();
-              passwordController.clear();
-              noteController.clear();
-              groupController.clear();
-              Navigator.of(context).pop();
+                );
+                titleController.clear();
+                passwordController.clear();
+                noteController.clear();
+                groupController.clear();
+                lengthController.clear();
+                Navigator.of(context).pop();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Failed to add password: ${e.toString()}')),
                 );
               }
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Please enter valid data')),
-              );
             }
           },
           child: const Text('Save'),
