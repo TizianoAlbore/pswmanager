@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,13 +14,28 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // Question mark is nullable operator, makes the variable nullable
+  String? _temporizedPassphrase;
+  Timer? _passwordTimer;
+
   Future<void> _login() async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      // Save the password temporarily
+      _temporizedPassphrase = _passwordController.text.trim();
+
+      // Set a timer to clear the password after a certain period (e.g., 5 minutes)
+      _passwordTimer?.cancel();
+      _passwordTimer = Timer(const Duration(seconds: 10), () {
+        _temporizedPassphrase = null;
+      });
+      Navigator.pushReplacementNamed(
+        context,
+        '/dashboard',
+        arguments: _temporizedPassphrase,);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: ${e.toString()}')),

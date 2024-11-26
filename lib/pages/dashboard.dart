@@ -23,6 +23,9 @@ class _DashboardPageState extends State<DashboardPage> {
     final String userId = user?.uid ?? 'Unknown User ID';
     final String userEmail = user?.email ?? 'Unknown Email';
 
+    // Ottieni la password temporanea passata come argomento
+    final String? _temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -41,24 +44,25 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [Text(
-              'Welcome!\n\nUser ID: $userId\nEmail: $userEmail',
-              textAlign: TextAlign.center
+            children: [
+              Text(
+                'Welcome!\n\nUser ID: $userId\nEmail: $userEmail\nTemporary Password: ${_temporizedPassphrase ?? 'No Temporary Password'}',
+                textAlign: TextAlign.center,
             ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CustomModal(
-                      firestore: firestore,
-                      userId: userId,
-                    );
-                  },
-                );
-              },
-              child: const Text('Add New Entry'),
-            ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     showDialog(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         return CustomModal(
+            //           firestore: firestore,
+            //           userId: userId,
+            //         );
+            //       },
+            //     );
+            //   },
+            //   child: const Text('Add New Entry'),
+            // ),
             ],
           ),
         ),
