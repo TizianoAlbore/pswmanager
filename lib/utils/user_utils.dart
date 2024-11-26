@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-// Aggiungi un utente a Firestore con uno schema di base
+//add user to firestore
 Future<void> addUser(userCredential, firestore, emailController) async {
   String userId = userCredential.user!.uid;
 
@@ -65,5 +65,49 @@ Future<void> addPassword(String title, String username, String cryptPassword, St
   }
 }
 
+//delete password entry from firestore
+Future<void> deletePassword(String id, FirebaseFirestore firestore, String userId) async{
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    userData['groups'].forEach((key, value) {
+      if (value.containsKey(id)) {
+        value.remove(id);
+        firestore.collection('users').doc(userId).update({
+          'groups.$key': value,
+        });
+      }
+    });
+  } else {
+    throw Exception('User not found');
+  }
+}
+
+//update password entry in firestore
+Future<void> updatePassword(String id, String title, String username, String cryptPassword, String note, String group, FirebaseFirestore firestore, String userId) async {
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    if ((userData['groups'] ?? {}).containsKey(group)) {
+      if ((userData['groups.$group'] ?? {}).containsKey(id)) {
+        Map<String, String> password = {
+          'title': title,
+          'username': username,
+          'password': cryptPassword,
+          'Note': note,
+        };
+        await firestore.collection('users').doc(userId).update({
+          'groups.$group.$id': password,
+        });
+      } else {
+        throw Exception('Entry not found');
+      }
+    } else {
+      throw Exception('Group not found');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+}
 
 

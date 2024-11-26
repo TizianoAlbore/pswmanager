@@ -49,20 +49,20 @@ class _DashboardPageState extends State<DashboardPage> {
                 'Welcome!\n\nUser ID: $userId\nEmail: $userEmail\nTemporary Password: ${_temporizedPassphrase ?? 'No Temporary Password'}',
                 textAlign: TextAlign.center,
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     showDialog(
-            //       context: context,
-            //       builder: (BuildContext context) {
-            //         return CustomModal(
-            //           firestore: firestore,
-            //           userId: userId,
-            //         );
-            //       },
-            //     );
-            //   },
-            //   child: const Text('Add New Entry'),
-            // ),
+            ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomModal(
+                      firestore: firestore,
+                      userId: userId,
+                    );
+                  },
+                );
+              },
+              child: const Text('Add New Entry'),
+            ),
             ],
           ),
         ),
