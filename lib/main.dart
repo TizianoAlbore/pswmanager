@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'pages/login.dart';
 import 'pages/signup.dart';
 import 'pages/dashboard.dart';
+import 'pages/settings.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
+        '/settings': (context) => const SettingsPage(),
       },
     );
   }

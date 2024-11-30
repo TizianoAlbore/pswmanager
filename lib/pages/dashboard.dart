@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pw_frontend/widgets/modal.dart';
+import 'package:pw_frontend/widgets/drawer.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -39,7 +40,18 @@ class _DashboardPageState extends State<DashboardPage> {
             },
           ),
         ],
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          }
+        ),
       ),
+      drawer: DrawerWidget(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
