@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/update_masterPassphrase.dart';
 
 class SettingsPage extends StatefulWidget {
