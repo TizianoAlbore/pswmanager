@@ -149,12 +149,3 @@ class _DataTableSource extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 }
-
-Navigator.pushNamed(context, '/group_column');
-ElevatedButton(
-  onPressed: () {
-    Navigator.pushNamed(context, '/group_column');
-  },
-  child: const Text('Go to Group Column Page'),
-);
-
