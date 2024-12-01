@@ -5,7 +5,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'pages/login.dart';
 import 'pages/signup.dart';
 import 'pages/dashboard.dart';
+<<<<<<< HEAD
+import 'group_column.dart';
+=======
 import 'pages/settings.dart';
+>>>>>>> a9b44df4b537cdf268d194ef8ad9f23c1fb7b66e
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +36,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
+<<<<<<< HEAD
+        '/group_column': (context) => const GroupColumnPage(), // Add route for GroupColumnPage
+=======
         '/settings': (context) => const SettingsPage(),
+>>>>>>> a9b44df4b537cdf268d194ef8ad9f23c1fb7b66e
       },
     );
   }
