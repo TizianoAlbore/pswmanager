@@ -6,6 +6,8 @@ import 'pages/login.dart';
 import 'pages/signup.dart';
 import 'pages/dashboard.dart';
 import 'pages/settings.dart';
+import 'group_column.dart'; // Import the GroupColumnPage file
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/settings': (context) => const SettingsPage(),
+        '/group_column': (context) => const GroupColumnPage(), // Add route for GroupColumnPage
       },
     );
   }
