@@ -47,41 +47,60 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
-        automaticallyImplyLeading: false
-        ),
-      body: Padding(
-        padding: const EdgeInsets.all(100.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: SizedBox(
+          width: 300, // Limita la larghezza del form
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0), // Padding verticale
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Minimizza lo spazio occupato verticalmente
+              crossAxisAlignment: CrossAxisAlignment.stretch, // Allinea gli elementi
+              children: [
+                Text(
+                  'Signup',
+                  style: TextStyle(
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center, // Allinea il titolo al centro
+                ),
+                SizedBox(height: 20), // Spazio
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _confirmPasswordController,
+                  decoration: const InputDecoration(labelText: 'Confirm Password'),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _signup,
+                  child: const Text('Sign Up'),
+                ),
+                const SizedBox(height: 30),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Already have an account? Login'),
+                ),
+              ],
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _signup,
-              child: const Text('Sign Up'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Already have an account? Login'),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
+
