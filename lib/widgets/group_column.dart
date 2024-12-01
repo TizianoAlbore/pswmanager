@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class GroupColumnPage extends StatelessWidget {
-  const GroupColumnPage({super.key});
+class GroupColumnPage extends StatefulWidget {
+  final FirebaseFirestore firestore;
+  final String userId;
 
+  const GroupColumnPage({Key? key, required this.firestore, required this.userId}) : super(key: key);
+
+  @override
+  State<GroupColumnPage> createState() => _GroupColumnPageState();
+}
+
+class _GroupColumnPageState extends State<GroupColumnPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

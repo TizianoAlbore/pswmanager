@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'pages/login.dart';
 import 'pages/signup.dart';
 import 'pages/dashboard.dart';
-import 'group_column.dart';
 import 'pages/settings.dart';
 
 
@@ -34,9 +33,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
-        '/group_column': (context) => const GroupColumnPage(), // Add route for GroupColumnPage
         '/settings': (context) => const SettingsPage(),
-        '/group_column': (context) => const GroupColumnPage(), // Add route for GroupColumnPage
       },
     );
   }
