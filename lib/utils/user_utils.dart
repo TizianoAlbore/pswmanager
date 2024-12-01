@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 //add user to firestore
 Future<void> addUser(userCredential, firestore, emailController) async {
   String userId = userCredential.user!.uid;
 
-  Map<String, Map<String, Map<String, String>>> groups = {};
+  Map<String, Map<String, Map<String, String>>> groups = {
+    'General': {},
+  };
   await firestore.collection('users').doc(userId).set({
     'email': emailController.text.trim(),
     'groups': groups,
   });
 }
 
-Future<List<DropdownMenuItem<String>>> getGroups(FirebaseFirestore firestore, String userId) async {
-  List<DropdownMenuItem<String>> groups = [];
+Future<List<String>> getGroups(FirebaseFirestore firestore, String userId) async {
+  List<String> groups = [];
   await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
       data['groups'].forEach((key, value) {
-        groups.add(DropdownMenuItem<String>(
-          value: key,
-          child: Text(key),
-        ));
+        groups.add(key.toString());
       });
     }
   });
@@ -110,4 +110,40 @@ Future<void> updatePassword(String id, String title, String username, String cry
   }
 }
 
+Future<void> addGroup(String group, FirebaseFirestore firestore, String userId) async {
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    if (!(userData['groups'] ?? {}).containsKey(group)) {
+      await firestore.collection('users').doc(userId).update({
+        'groups.$group': {},
+      });
+    } else {
+      throw Exception('Group already exists');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+}
 
+Future<void> deleteGroup(String group, FirebaseFirestore firestore, String userId) async {
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    if ((userData['groups'] ?? {}).containsKey(group)) {
+      if (!(userData['groups'].length == 1)) {
+        userData['groups'].remove(group);
+        await firestore.collection('users').doc(userId).update({
+          'groups': userData['groups'],
+      });
+      } else {
+        throw Exception('Cannot delete last group');
+      }
+
+    } else {
+      throw Exception('Group not found');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+}

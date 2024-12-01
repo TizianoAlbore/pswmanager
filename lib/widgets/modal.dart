@@ -47,117 +47,122 @@ class _CustomModalState extends State<CustomModal> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
-                controller: titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
-              ),
-              TextFormField(
-                controller: passwordController,
-                obscureText: _passwordVisible,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.refresh),
-                        onPressed: () => passwordController.text = generatePassword(length: lengthController.text.isEmpty ? 16 : int.parse(lengthController.text),
-                                                                                    digits: _includeDigits,
-                                                                                    capitalLetters:  _includeCapitalLetters,
-                                                                                    specialChars: _includeSpecialChars),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          _passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                          color: Theme.of(context).primaryColorDark,
-                        ),
-                        onPressed: () => _toggle(),
-                      ),
-                    ],
-                ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a password';
-                  } 
-                  return null;
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                return 'Please enter a title';
                 }
+                return null;
+              },
               ),
-              Row(
+              TextFormField(
+              controller: usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+              ),
+              TextFormField(
+              controller: passwordController,
+              obscureText: _passwordVisible,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  ToggleButtons(
-                    isSelected: [_includeCapitalLetters, _includeSpecialChars, _includeDigits],
-                    onPressed: (int index) {
-                      setState(() {
-                        if (index == 0) {
-                          _includeCapitalLetters = !_includeCapitalLetters;
-                        } else if (index == 1) {
-                          _includeSpecialChars = !_includeSpecialChars;
-                        } else if (index == 2) {
-                          _includeDigits = !_includeDigits;
-                        }
-                      });
-                    },
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('Capital Letters'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('Symbols'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text('Numbers'),
-                      ),
-                    ],
+                  IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () => passwordController.text = generatePassword(length: lengthController.text.isEmpty ? 16 : int.parse(lengthController.text),
+                                                digits: _includeDigits,
+                                                capitalLetters:  _includeCapitalLetters,
+                                                specialChars: _includeSpecialChars),
+                  ),
+                  IconButton(
+                  icon: Icon(
+                    _passwordVisible
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+                    color: Theme.of(context).primaryColorDark,
+                  ),
+                  onPressed: () => _toggle(),
                   ),
                 ],
               ),
-              TextFormField(
-                controller: lengthController,
-                decoration: const InputDecoration(labelText: 'Length'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                onChanged: (value) => {int.parse(value) > 50 ? lengthController.text = '50' : null},
               ),
-              TextFormField(
-                controller: noteController,
-                decoration: const InputDecoration(labelText: 'Note'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                return 'Please enter a password';
+                } 
+                return null;
+              }
               ),
-              FutureBuilder<List<DropdownMenuItem<String>>>(
-                future: getGroups(widget.firestore, widget.userId),
-                builder: (BuildContext context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    List<DropdownMenuItem<String>> items = snapshot.data ?? [];
-                    return DropdownButtonFormField<String>(
-                      items: items,
-                      value: items.isNotEmpty ? items[0].value : null,
-                      onChanged: (String? value) {
-                        setState(() {
-                          groupController.text = value!;
-                        });
-                      },
-                      decoration: const InputDecoration(labelText: 'Group'),
-                    );
+              Row(
+              children: [
+                ToggleButtons(
+                isSelected: [_includeCapitalLetters, _includeSpecialChars, _includeDigits],
+                onPressed: (int index) {
+                  setState(() {
+                  if (index == 0) {
+                    _includeCapitalLetters = !_includeCapitalLetters;
+                  } else if (index == 1) {
+                    _includeSpecialChars = !_includeSpecialChars;
+                  } else if (index == 2) {
+                    _includeDigits = !_includeDigits;
                   }
+                  });
                 },
+                children: const <Widget>[
+                  Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('Capital Letters'),
+                  ),
+                  Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('Symbols'),
+                  ),
+                  Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text('Numbers'),
+                  ),
+                ],
+                ),
+              ],
+              ),
+              TextFormField(
+              controller: lengthController,
+              decoration: const InputDecoration(labelText: 'Length'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              onChanged: (value) => {int.parse(value) > 50 ? lengthController.text = '50' : null},
+              ),
+              TextFormField(
+              controller: noteController,
+              decoration: const InputDecoration(labelText: 'Note'),
+              ),
+              FutureBuilder<List<String>>(
+              future: getGroups(widget.firestore, widget.userId),
+              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+                } else {
+                List<DropdownMenuItem<String>> items = snapshot.data?.map((String value) {
+                  return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                  );
+                }).toList() ?? [];
+                return DropdownButtonFormField<String>(
+                  items: items,
+                  value: items.isNotEmpty ? items[0].value : null,
+                  onChanged: (String? value) {
+                  setState(() {
+                    groupController.text = value!;
+                  });
+                  },
+                  decoration: const InputDecoration(labelText: 'Group'),
+                );
+                }
+              },
               ),
             ],  
           ),

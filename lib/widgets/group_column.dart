@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/user_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupColumnPage extends StatefulWidget {
@@ -12,6 +13,8 @@ class GroupColumnPage extends StatefulWidget {
 }
 
 class _GroupColumnPageState extends State<GroupColumnPage> {
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -36,38 +39,62 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
 
   // Groups Column
   Widget _buildGroupsColumn() {
-    final List<String> groups = [
-      "Social Media",
-      "Work",
-      "Personal",
-      "Banking",
-      "Others"
-    ];
-
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            "Groups",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: groups.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(groups[index]),
-                onTap: () {
-                  // Handle group selection
-                  debugPrint('Selected Group: ${groups[index]}');
-                },
-              );
-            },
-          ),
-        ),
-      ],
+    return FutureBuilder(
+      future: getGroups(widget.firestore, widget.userId),
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          List<String> groups = snapshot.data ?? [];
+          return Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Groups",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: groups.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(groups[index]),
+                      onTap: () {
+                        // Handle group selection
+                        debugPrint('Selected Group: ${groups[index]}');
+                      },
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Colors.red[400],
+                        onPressed: () async {
+                          try {
+                            await deleteGroup(groups[index], widget.firestore, widget.userId);
+                            setState(() {
+                              groups.removeAt(index);
+                            });
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('$e'),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 
