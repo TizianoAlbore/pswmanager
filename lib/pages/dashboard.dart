@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pw_frontend/widgets/group_modal.dart';
 import 'package:pw_frontend/widgets/modal.dart';
 import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:pw_frontend/widgets/group_column.dart';
@@ -63,14 +64,12 @@ class _DashboardPageState extends State<DashboardPage> {
           FloatingActionButton(onPressed: () {
             showDialog(context: context,
               builder: (BuildContext context) {
-                return const AlertDialog(
-                  title: Text('TODO: add group')
-                );
+                return GroupModal(firestore: firestore, userId: userId); 
               }
             );
           },
           child: const Icon(Icons.folder),
-        ),
+          ),
         ],
       ),
       body: Column(
