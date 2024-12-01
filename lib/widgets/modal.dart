@@ -139,28 +139,33 @@ class _CustomModalState extends State<CustomModal> {
               ),
               FutureBuilder<List<String>>(
               future: getGroups(widget.firestore, widget.userId),
-              builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
+                  return Text('Error: ${snapshot.error}');
                 } else {
-                List<DropdownMenuItem<String>> items = snapshot.data?.map((String value) {
+                  List<DropdownMenuItem<String>> items = snapshot.data?.map((String value) {
                   return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
+                    value: value,
+                    child: Text(value),
                   );
-                }).toList() ?? [];
-                return DropdownButtonFormField<String>(
-                  items: items,
-                  value: items.isNotEmpty ? items[0].value : null,
-                  onChanged: (String? value) {
-                  setState(() {
-                    groupController.text = value!;
-                  });
-                  },
+                  }).toList() ?? [];
+                  
+                  if (items.isNotEmpty && groupController.text.isEmpty) {
+                  groupController.text = items[0].value!;
+                  }
+
+                  return DropdownButtonFormField<String>(
+                    items: items,
+                    value: items.isNotEmpty ? groupController.text : null,
+                    onChanged: (String? value) {
+                      setState(() {
+                      groupController.text = value!;
+                      });
+                    },
                   decoration: const InputDecoration(labelText: 'Group'),
-                );
+                  );
                 }
               },
               ),
