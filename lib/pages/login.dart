@@ -57,14 +57,14 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisSize: MainAxisSize.min, // Minimizza lo spazio occupato
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Login',
                   style: TextStyle(
                     fontSize: 24, 
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20), // Spazio sotto il testo
+                const SizedBox(height: 20), // Spazio sotto il testo
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
@@ -75,20 +75,20 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
                 ),
-                SizedBox(height: 20), // Spazio
+                const SizedBox(height: 20), // Spazio
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _login,
                   child: const Text('Login'),
                 ),
-                SizedBox(height: 20), // Spazio
+                const SizedBox(height: 20), // Spazio
                 TextButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/signup');
                   },
                   child: const Text('Don\'t have an account? Sign up'),
                 ),
-                SizedBox(height: 50), // Spazio
+                const SizedBox(height: 50), // Spazio
               ],
             ),
           ),

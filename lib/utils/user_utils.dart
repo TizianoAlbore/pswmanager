@@ -13,6 +13,18 @@ Future<void> addUser(userCredential, firestore, emailController) async {
   });
 }
 
+Future<Map<String, dynamic>> getUser(FirebaseFirestore firestore, String userId) async {
+  Map<String, dynamic> data = {};
+  await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      data = documentSnapshot.data() as Map<String, dynamic>;
+    } else {
+      throw Exception('User not found');
+    }
+  });
+  return data;
+}
+
 Future<List<String>> getGroups(FirebaseFirestore firestore, String userId) async {
   List<String> groups = [];
   await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
@@ -21,9 +33,47 @@ Future<List<String>> getGroups(FirebaseFirestore firestore, String userId) async
       data['groups'].forEach((key, value) {
         groups.add(key.toString());
       });
+    } else {
+      throw Exception('User not found');
     }
   });
   return groups;
+}
+
+Future<Map<String, String>> getPasswordsFromGroup(FirebaseFirestore firestore, String userId, String group) async {
+  Map<String, String> passwords = {};
+  await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+      (data['groups'][group] ?? {} ).forEach((key, value) {
+        passwords[key] = value['title'];
+      });
+    }else {
+      throw Exception('User not found');
+    }
+  });
+  return passwords;
+}
+
+Future<Map<String, String>> getPasswordDetail(FirebaseFirestore firestore, String userId, String group, String id) async {
+  Map<String, String> passwdDetail = {};
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if(userCollection.exists){
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+
+    if ((userData['groups'] ?? {}).containsKey(group)) {
+      //check if id exists, then get details
+      if ((userData['groups.$group'] ?? {}).containsKey(id)) {
+        passwdDetail = userData['groups.$group.$id'];
+      } else {
+        //if id already exists throw exception
+        throw Exception('Password ID not found');
+      }
+    }
+  }else {
+    throw Exception('User not found');
+  }
+  return passwdDetail;
 }
 //add password entry to firestore
 Future<void> addPassword(String title, String username, String cryptPassword, String note, String group, FirebaseFirestore firestore, String userId) async {

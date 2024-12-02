@@ -1,4 +1,4 @@
-import '../lib/utils/totp/totp.dart';
+import 'package:pw_frontend/utils/totp/totp.dart';
 import 'package:test/test.dart';
 
 void main() {

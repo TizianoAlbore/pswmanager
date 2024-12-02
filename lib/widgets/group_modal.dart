@@ -6,7 +6,7 @@ class GroupModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
 
-  const GroupModal({Key? key, required this.firestore, required this.userId}) : super(key: key);
+  const GroupModal({super.key, required this.firestore, required this.userId});
 
   @override
   State<GroupModal> createState() => _GroupModalState();

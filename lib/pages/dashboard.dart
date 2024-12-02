@@ -25,7 +25,7 @@ class _DashboardPageState extends State<DashboardPage> {
     final String userEmail = user?.email ?? 'Unknown Email';
 
     // Get the temporized passphrase from the arguments
-    final String? _temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
+    final String? temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
 
     return Scaffold(
       appBar: AppBar(

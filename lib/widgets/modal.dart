@@ -8,7 +8,7 @@ class CustomModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
 
-  const CustomModal({Key? key, required this.firestore, required this.userId}) : super(key: key);
+  const CustomModal({super.key, required this.firestore, required this.userId});
 
   @override
   State<CustomModal> createState() => _CustomModalState();

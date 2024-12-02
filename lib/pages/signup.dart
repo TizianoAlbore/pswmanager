@@ -58,7 +58,7 @@ class _SignupPageState extends State<SignupPage> {
               mainAxisSize: MainAxisSize.min, // Minimizza lo spazio occupato verticalmente
               crossAxisAlignment: CrossAxisAlignment.stretch, // Allinea gli elementi
               children: [
-                Text(
+                const Text(
                   'Signup',
                   style: TextStyle(
                     fontSize: 24, 
@@ -66,7 +66,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   textAlign: TextAlign.center, // Allinea il titolo al centro
                 ),
-                SizedBox(height: 20), // Spazio
+                const SizedBox(height: 20), // Spazio
                 TextField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
