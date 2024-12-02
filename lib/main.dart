@@ -27,14 +27,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title:'Password Manager',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/dashboard',
       routes: {
-        '/': (context) => const LoginPage(),
+        '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/settings': (context) => const SettingsPage(),
       },
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 26, 24, 24),
+        colorScheme: ColorScheme.fromSeed(
+          brightness: Brightness.dark,
+          seedColor: Colors.purple),
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+            bodyLarge: TextStyle(fontSize: 18, color: Colors.white70),
+  ),
+      ),
     );
   }
 }

@@ -80,7 +80,7 @@ class _CustomModalState extends State<CustomModal> {
                     _passwordVisible
                     ? Icons.visibility
                     : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
+                    color: Theme.of(context).secondaryHeaderColor,
                   ),
                   onPressed: () => _toggle(),
                   ),

@@ -22,10 +22,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
-    final String userEmail = user?.email ?? 'Unknown Email';
+    //final String userEmail = user?.email ?? 'Unknown Email';
 
     // Get the temporized passphrase from the arguments
-    final String? temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
+    //final String? temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
 
     return Scaffold(
       appBar: AppBar(
