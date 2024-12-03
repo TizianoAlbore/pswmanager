@@ -65,33 +65,21 @@ class _PasswordManagerDashboardState extends State<PasswordManagerDashboard> {
 
   Widget _buildDataTable() {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator(color: Colors.indigo));
+      return Center(child: CircularProgressIndicator());
     }
 
     if (_data.isEmpty) {
-      return Center(
-        child: Text(
-          'No data available.',
-          style: TextStyle(color: Colors.black87, fontSize: 18),
-        ),
-      );
+      return Center(child: Text('No data available.'));
     }
 
     return PaginatedDataTable(
-      header: Text(
-        'Fetched Data',
-        style: TextStyle(
-          color: Colors.indigo,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-        ),
-      ),
+      header: Text('Fetched Data', style: TextStyle(color: Colors.black87)),
       rowsPerPage: _rowsPerPage,
       columns: _data.isNotEmpty
           ? _data[0].keys
               .map((key) => DataColumn(
-                  label: Text(key.toUpperCase(),
-                      style: TextStyle(color: Colors.teal))))
+                    label: Text(key.toUpperCase(), style: TextStyle(color: Colors.blueGrey)),
+                  ))
               .toList()
           : [],
       source: _DataTableSource(_data),
@@ -104,63 +92,68 @@ class _PasswordManagerDashboardState extends State<PasswordManagerDashboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Password Manager Dashboard'),
-        backgroundColor: Colors.indigo,
         centerTitle: true,
+        backgroundColor: Colors.teal, // Improved contrast
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              spacing: 10,
-              children: [
-                ElevatedButton(
-                  onPressed: () => _fetchData('total_passwords'),
-                  child: Text('Total Passwords'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-                ElevatedButton(
-                  onPressed: () => _fetchData('social_media_passwords'),
-                  child: Text('Social Media Passwords'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-                ElevatedButton(
-                  onPressed: () => _fetchData('button_3_endpoint'),
-                  child: Text('Button 3'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-                ElevatedButton(
-                  onPressed: () => _fetchData('button_4_endpoint'),
-                  child: Text('Button 4'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-                ElevatedButton(
-                  onPressed: () => _fetchData('button_5_endpoint'),
-                  child: Text('Button 5'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-                ElevatedButton(
-                  onPressed: () => _fetchData('button_6_endpoint'),
-                  child: Text('Button 6'),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.white),
-                ),
-              ],
+      body: SingleChildScrollView( // Ensures responsiveness
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                spacing: 10,
+                children: [
+                  ElevatedButton(
+                      onPressed: () => _fetchData('total_passwords'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white, // Better contrast
+                      ),
+                      child: Text('Total Passwords')),
+                  ElevatedButton(
+                      onPressed: () => _fetchData('social_media_passwords'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white,
+                      ),
+                      child: Text('Social Media Passwords')),
+                  ElevatedButton(
+                      onPressed: () => _fetchData('button_3_endpoint'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white,
+                      ),
+                      child: Text('Button 3')),
+                  ElevatedButton(
+                      onPressed: () => _fetchData('button_4_endpoint'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white,
+                      ),
+                      child: Text('Button 4')),
+                  ElevatedButton(
+                      onPressed: () => _fetchData('button_5_endpoint'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white,
+                      ),
+                      child: Text('Button 5')),
+                  ElevatedButton(
+                      onPressed: () => _fetchData('button_6_endpoint'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                        onPrimary: Colors.white,
+                      ),
+                      child: Text('Button 6')),
+                ],
+              ),
             ),
-          ),
-          Expanded(child: _buildDataTable()),
-        ],
+            Container(
+              padding: EdgeInsets.all(8),
+              child: _buildDataTable(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -176,13 +169,12 @@ class _DataTableSource extends DataTableSource {
     if (index >= _data.length) return null;
 
     final row = _data[index];
-    return DataRow(
-        cells: row.values
-            .map((value) => DataCell(Text(
-                  value.toString(),
-                  style: TextStyle(color: Colors.black87),
-                )))
-            .toList());
+    return DataRow(cells: row.values.map((value) {
+      return DataCell(Text(
+        value.toString(),
+        style: TextStyle(color: Colors.black87), // Consistent color
+      ));
+    }).toList());
   }
 
   @override
