@@ -1,93 +1,43 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pw_frontend/widgets/group_modal.dart';
-import 'package:pw_frontend/widgets/modal.dart';
-import 'package:pw_frontend/widgets/drawer.dart';
-import 'package:pw_frontend/widgets/group_column.dart';
+class GroupColumnPage extends StatelessWidget {
+  final FirebaseFirestore firestore;
+  final String userId;
+  final Color rowBorderColor;
+  final Color headingColor;
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  const GroupColumnPage({
+    Key? key,
+    required this.firestore,
+    required this.userId,
+    required this.rowBorderColor,
+    required this.headingColor,
+  }) : super(key: key);
 
-  @override
-  _DashboardPageState createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final User? user = FirebaseAuth.instance.currentUser;
-    final String userId = user?.uid ?? 'Unknown User ID';
-
-    // Color Palette (colorblind-friendly)
-    final Color primaryColor = Color(0xFF0066CC);  // Blue
-    final Color secondaryColor = Color(0xFF33CC99);  // Green
-    final Color backgroundColor = Color(0xFFF1F5F8);  // Light Gray
-    final Color buttonColor = Color(0xFF00B0FF);  // Light Blue
-    final Color accentColor = Color(0xFFFFB74D);  // Amber
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        automaticallyImplyLeading: false,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-        backgroundColor: primaryColor, // Blue color for the app bar
-      ),
-      drawer: const DrawerWidget(),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CustomModal(
-                    firestore: firestore,
-                    userId: userId,
-                  );
-                },
-              );
-            },
-            backgroundColor: buttonColor,
-            child: const Icon(Icons.add),
+    // Example of using the rowBorderColor and headingColor
+    return ListView.builder(
+      itemCount: 10,  // Example count, use actual data length
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 5.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: rowBorderColor),
+            borderRadius: BorderRadius.circular(8),
           ),
-          const Padding(padding: EdgeInsets.only(top: 10.0)),
-          FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return GroupModal(firestore: firestore, userId: userId);
-                },
-              );
-            },
-            backgroundColor: accentColor,
-            child: const Icon(Icons.folder),
-          ),
-        ],
-      ),
-      body: Container(
-        color: backgroundColor, // Light gray background for the body
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Expanded(
-              child: GroupColumnPage(firestore: firestore, userId: userId),
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(10),
+            title: Text(
+              'Row Heading $index',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: headingColor, // Apply heading color
+              ),
             ),
-          ],
-        ),
-      ),
+            subtitle: Text('Row content for $index'),
+          ),
+        );
+      },
     );
   }
 }
