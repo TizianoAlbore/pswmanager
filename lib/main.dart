@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title:'Password Manager',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/dashboard',
+      initialRoute: '/',
       routes: {
-        '/login': (context) => const LoginPage(),
+        '/': (context) => const LoginPage(),
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/settings': (context) => const SettingsPage(),
