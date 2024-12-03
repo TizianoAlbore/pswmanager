@@ -51,6 +51,44 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.blueGrey, // Colorblind-friendly blue
         automaticallyImplyLeading: false,
       ),
+<<<<<<< HEAD
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/background.jpg', // Add your background image asset
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Login form
+          Center(
+            child: SizedBox(
+              width: 300,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Ensures login text is visible
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _emailController,
+                      style: TextStyle(color: Colors.black), // Text color
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.blue), // Changed label color
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+=======
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -80,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
+>>>>>>> b194a0b2ef5996e4772f804f3997f3890990117c
                         ),
                         const SizedBox(height: 20),
                         TextField(
@@ -91,6 +130,20 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
+<<<<<<< HEAD
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      style: TextStyle(color: Colors.black), // Text color
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(color: Colors.blue), // Changed label color
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+=======
                         const SizedBox(height: 15),
                         TextField(
                           controller: _passwordController,
@@ -100,6 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: const Icon(Icons.lock, color: Colors.blueGrey),
                           ),
                           obscureText: true,
+>>>>>>> b194a0b2ef5996e4772f804f3997f3890990117c
                         ),
                         const SizedBox(height: 25),
                         ElevatedButton(
