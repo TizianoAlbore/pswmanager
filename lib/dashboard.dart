@@ -65,19 +65,33 @@ class _PasswordManagerDashboardState extends State<PasswordManagerDashboard> {
 
   Widget _buildDataTable() {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return Center(child: CircularProgressIndicator(color: Colors.indigo));
     }
 
     if (_data.isEmpty) {
-      return Center(child: Text('No data available.'));
+      return Center(
+        child: Text(
+          'No data available.',
+          style: TextStyle(color: Colors.black87, fontSize: 18),
+        ),
+      );
     }
 
     return PaginatedDataTable(
-      header: Text('Fetched Data'),
+      header: Text(
+        'Fetched Data',
+        style: TextStyle(
+          color: Colors.indigo,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
       rowsPerPage: _rowsPerPage,
       columns: _data.isNotEmpty
           ? _data[0].keys
-              .map((key) => DataColumn(label: Text(key.toUpperCase())))
+              .map((key) => DataColumn(
+                  label: Text(key.toUpperCase(),
+                      style: TextStyle(color: Colors.teal))))
               .toList()
           : [],
       source: _DataTableSource(_data),
@@ -90,6 +104,7 @@ class _PasswordManagerDashboardState extends State<PasswordManagerDashboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Password Manager Dashboard'),
+        backgroundColor: Colors.indigo,
         centerTitle: true,
       ),
       body: Column(
@@ -100,23 +115,47 @@ class _PasswordManagerDashboardState extends State<PasswordManagerDashboard> {
               spacing: 10,
               children: [
                 ElevatedButton(
-                    onPressed: () => _fetchData('total_passwords'),
-                    child: Text('Total Passwords')),
+                  onPressed: () => _fetchData('total_passwords'),
+                  child: Text('Total Passwords'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
                 ElevatedButton(
-                    onPressed: () => _fetchData('social_media_passwords'),
-                    child: Text('Social Media Passwords')),
+                  onPressed: () => _fetchData('social_media_passwords'),
+                  child: Text('Social Media Passwords'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
                 ElevatedButton(
-                    onPressed: () => _fetchData('button_3_endpoint'),
-                    child: Text('Button 3')),
+                  onPressed: () => _fetchData('button_3_endpoint'),
+                  child: Text('Button 3'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
                 ElevatedButton(
-                    onPressed: () => _fetchData('button_4_endpoint'),
-                    child: Text('Button 4')),
+                  onPressed: () => _fetchData('button_4_endpoint'),
+                  child: Text('Button 4'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
                 ElevatedButton(
-                    onPressed: () => _fetchData('button_5_endpoint'),
-                    child: Text('Button 5')),
+                  onPressed: () => _fetchData('button_5_endpoint'),
+                  child: Text('Button 5'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
                 ElevatedButton(
-                    onPressed: () => _fetchData('button_6_endpoint'),
-                    child: Text('Button 6')),
+                  onPressed: () => _fetchData('button_6_endpoint'),
+                  child: Text('Button 6'),
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white),
+                ),
               ],
             ),
           ),
@@ -137,7 +176,13 @@ class _DataTableSource extends DataTableSource {
     if (index >= _data.length) return null;
 
     final row = _data[index];
-    return DataRow(cells: row.values.map((value) => DataCell(Text(value.toString()))).toList());
+    return DataRow(
+        cells: row.values
+            .map((value) => DataCell(Text(
+                  value.toString(),
+                  style: TextStyle(color: Colors.black87),
+                )))
+            .toList());
   }
 
   @override

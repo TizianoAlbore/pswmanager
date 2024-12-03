@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       _passwordTimer = Timer(const Duration(seconds: 10), () {
         _temporizedPassphrase = null;
       });
+
       Navigator.pushReplacementNamed(
         context,
         '/dashboard',
@@ -46,54 +47,95 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Welcome'),
+        backgroundColor: Colors.blueGrey, // Colorblind-friendly blue
         automaticallyImplyLeading: false,
       ),
       body: Center(
-        child: SizedBox(
-          width: 300, // Riduce la larghezza del form
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0), // Riduce il padding
-            child: Column(
-              mainAxisSize: MainAxisSize.min, // Minimizza lo spazio occupato
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 24, 
-                    fontWeight: FontWeight.bold,
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: constraints.maxWidth < 600 ? 300 : 400, // Responsiveness
+                ),
+                child: Card(
+                  color: Colors.white,
+                  elevation: 8,
+                  margin: const EdgeInsets.all(16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Login',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _emailController,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            border: OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.email, color: Colors.blueGrey),
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                        const SizedBox(height: 15),
+                        TextField(
+                          controller: _passwordController,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.lock, color: Colors.blueGrey),
+                          ),
+                          obscureText: true,
+                        ),
+                        const SizedBox(height: 25),
+                        ElevatedButton(
+                          onPressed: _login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                          ),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          child: const Text(
+                            'Don\'t have an account? Sign up',
+                            style: TextStyle(color: Colors.blueGrey),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 20), // Spazio sotto il testo
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                ),
-                const SizedBox(height: 10), // Spazio più piccolo tra i campi
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                ),
-                const SizedBox(height: 20), // Spazio
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text('Login'),
-                ),
-                const SizedBox(height: 20), // Spazio
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
-                  },
-                  child: const Text('Don\'t have an account? Sign up'),
-                ),
-                const SizedBox(height: 50), // Spazio
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
+      backgroundColor: Colors.grey.shade100,
     );
   }
 }
