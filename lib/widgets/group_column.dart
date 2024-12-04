@@ -1,48 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:pw_frontend/widgets/password_detail.dart';
 import '../utils/user_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GroupColumnPage extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
+  final TextEditingController selectedGroupController;
+  Function callback_selectedGroup;
 
-  const GroupColumnPage({super.key, required this.firestore, required this.userId});
+  GroupColumnPage({
+    super.key,
+    required this.firestore,
+    required this.userId,
+    required this.selectedGroupController,
+    required this.callback_selectedGroup,
+  });
 
   @override
   State<GroupColumnPage> createState() => _GroupColumnPageState();
-
 }
 
 class _GroupColumnPageState extends State<GroupColumnPage> {
+  bool _isAddingGroup = false;
+  final TextEditingController _newGroupController = TextEditingController();
 
-  final TextEditingController _selectedGroupController = TextEditingController();
-  final TextEditingController _selectedPasswordController = TextEditingController();
-
-  @override 
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: _buildGroupsColumn(), 
-          ),
-          Expanded(
-            flex: 1,
-            child: _buildGroupPasswordsColumn(),
-          ),
-          Expanded(
-            flex: 2,
-            child: _buildPasswordDetailsColumn(), 
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Groups Column
-  Widget _buildGroupsColumn() {
     return FutureBuilder(
       future: getGroups(widget.firestore, widget.userId),
       builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
@@ -54,7 +37,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               CircularProgressIndicator(),
-            ]
+            ],
           );
         } else if (snapshot.hasError) {
           return Center(
@@ -73,33 +56,122 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: groups.length,
+                  itemCount: groups.length + 1,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(groups[index]),
-                      onTap: () {
-                        setState(() {
-                          _selectedGroupController.text = groups[index];
-                        });
-                      },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        color: Colors.red[400],
-                        onPressed: () async {
-                          try {
-                            await deleteGroup(groups[index], widget.firestore, widget.userId);
+                    if (index == groups.length) {
+                      if (_isAddingGroup) {
+                        return ListTile(
+                          title: TextField(
+                            autofocus: true,
+                            controller: _newGroupController,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter group name',
+                            ),
+                            onSubmitted: (value) async {
+                              if (value.isNotEmpty) {
+                                try {
+                                  await addGroup(value, widget.firestore, widget.userId);
+                                  setState(() {
+                                    groups.add(value);
+                                    _isAddingGroup = false;
+                                    _newGroupController.clear();
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Group $value added'),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$e'),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.check),
+                            color: Colors.green,
+                            onPressed: () async {
+                              if (_newGroupController.text.isNotEmpty) {
+                                try {
+                                  await addGroup(_newGroupController.text, widget.firestore, widget.userId);
+                                  setState(() {
+                                    groups.add(_newGroupController.text);
+                                    _isAddingGroup = false;
+                                    _newGroupController.clear();
+                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Group ${_newGroupController.text} added'),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('$e'),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        );
+                      } else {
+                        return ListTile(
+                          trailing: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isAddingGroup = true;
+                              });
+                            },
+                            icon: const Icon(Icons.add_rounded),
+                            color: Colors.green,
+                          ),
+                        );
+                      }
+                    }
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                            groups[index],
+                            style: TextStyle(
+                              color: (widget.selectedGroupController.text == groups[index])
+                                  ? Colors.white
+                                  : Colors.white70,
+                            ),
+                          ),
+                          onTap: () {
                             setState(() {
-                              groups.removeAt(index);
+                              widget.callback_selectedGroup(groups[index]);
                             });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('$e'),
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                          },
+                          selected: widget.selectedGroupController.text == groups[index],
+                          selectedTileColor: Colors.grey[850],
+                          trailing: IconButton(
+                            icon: const Icon(Icons.remove_rounded),
+                            color: Colors.red[400],
+                            onPressed: () async {
+                              try {
+                                await deleteGroup(groups[index], widget.firestore, widget.userId);
+                                setState(() {
+                                  groups.removeAt(index);
+                                });
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('$e'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        const Divider(),
+                      ],
                     );
                   },
                 ),
@@ -108,158 +180,6 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
           );
         }
       },
-    );
-  }
-
-  // Group Passwords Column
-  Widget _buildGroupPasswordsColumn() {
-    return FutureBuilder(
-      future: getUser(widget.firestore, widget.userId),
-      builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Column(
-            children: [
-              Text(
-                'Group Passwords',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              CircularProgressIndicator(),
-            ]
-          );
-        } else if (snapshot.hasError) {
-          return const Column(
-            children: [
-              Text(
-                'Select a group to view passwords',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),     
-            ],
-          );
-        } else {
-          Map<String, dynamic> passwords = snapshot.data ?? {};
-          Map<String, dynamic> passwordsList = passwords['groups'][_selectedGroupController.text] ?? {};
-          return Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Group Passwords",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: passwordsList.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(passwordsList.values.elementAt(index)['title']),
-                      onTap: () {
-                        setState(() {
-                          _selectedPasswordController.text = passwordsList.keys.elementAt(index);
-                        });
-                      },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        color: Colors.red[400],
-                        onPressed: () async {
-                          try {
-                            await deletePassword(passwordsList.keys.elementAt(index), widget.firestore, widget.userId);
-                            setState(() {
-                                passwordsList.remove(passwordsList.keys.elementAt(index));
-                            });
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('$e'),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        }
-      }
-    );
-  }
-  // Password Details Column
-  Widget _buildPasswordDetailsColumn() {
-    return FutureBuilder(
-      future: getUser(widget.firestore, widget.userId),
-      builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Column(
-            children: [
-              Text(
-                'Password Details',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              CircularProgressIndicator(),
-            ]
-          );
-        } else if (snapshot.hasError) {
-          return const Column(
-            children: [
-              Text(
-                'Password Details',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text('Select a password to view details'),
-            ]
-          );
-        } else {
-          Map<String, dynamic> passwords = snapshot.data ?? {};
-          if (  _selectedPasswordController.text.isEmpty ||
-                _selectedGroupController.text.isEmpty ||
-                passwords.isEmpty ||
-                passwords['groups'][_selectedGroupController.text] == null ||
-                passwords['groups'][_selectedGroupController.text][_selectedPasswordController.text] == null) {
-            return const Column(
-              children: [
-                Text(
-                  'Password Details',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                Text('No password details available'),
-              ],
-            );
-          }
-          passwords = passwords['groups'][_selectedGroupController.text][_selectedPasswordController.text] ?? {};
-          return Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Passwords Details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: passwords.length,
-                  itemBuilder: (context, index) {
-                    String key = passwords.keys.elementAt(index);
-                    String value = passwords[key];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PasswordDetail(title: key, value: value),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        }
-      }
     );
   }
 }

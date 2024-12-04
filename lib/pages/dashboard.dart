@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pw_frontend/widgets/group_modal.dart';
-import 'package:pw_frontend/widgets/modal.dart';
 import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:pw_frontend/widgets/group_column.dart';
+import 'package:pw_frontend/widgets/password_column.dart';
+import 'package:pw_frontend/widgets/password_detail.dart';
 
 
 class DashboardPage extends StatefulWidget {
@@ -15,7 +15,21 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
+  final TextEditingController _selectedGroupController = TextEditingController();
+  final TextEditingController _selectedPasswordController = TextEditingController();
+   
+  callback_selectedGroup(newValue) {
+    setState(() {
+      _selectedGroupController.text = newValue;
+    });
+  }
 
+  callback_selectedPassword(newValue) {
+  setState(() {
+    _selectedPasswordController.text = newValue;
+  });
+  }
+  
   @override
   Widget build(BuildContext context) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,6 +40,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
     // Get the temporized passphrase from the arguments
     //final String? temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -43,42 +59,22 @@ class _DashboardPageState extends State<DashboardPage> {
         ),
       ),
       drawer: const DrawerWidget(),
-      floatingActionButton: Column( 
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CustomModal(
-                    firestore: firestore,
-                    userId: userId,
-                  );
-                },
-              );
-            },
-            child: const Icon(Icons.add),
-          ),
-          const Padding(padding: EdgeInsets.only(top: 10.0)),
-          FloatingActionButton(onPressed: () {
-            showDialog(context: context,
-              builder: (BuildContext context) {
-                return GroupModal(firestore: firestore, userId: userId); 
-              }
-            );
-          },
-          child: const Icon(Icons.folder),
-          ),
-        ],
-      ),
-      body: Column(
+      body: Row(
         children: [
           Expanded(
-            child: GroupColumnPage(firestore: firestore, userId: userId),
+            flex: 1,
+            child: GroupColumnPage(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, callback_selectedGroup: callback_selectedGroup), 
           ),
-        ],
-      ),
+          Expanded(
+            flex: 1,
+            child: PasswordColumn(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, selectedPasswordController: _selectedPasswordController, callback_selectedGroup: callback_selectedGroup, callback_selectedPassword: callback_selectedPassword),
+          ),
+          Expanded(
+            flex: 2,
+            child: PasswordDetail(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, selectedPasswordController: _selectedPasswordController,), 
+          ),
+          ],
+        ),
     );
   }
 }
