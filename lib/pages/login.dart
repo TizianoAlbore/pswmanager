@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         automaticallyImplyLeading: false,
       ),
       body: Container(
-  color: Colors.white, // Set background color to plain white
+  //color: Colors.white, // Set background color to plain white
   child: Center(
     child: SizedBox(
       width: 300,
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Ensure text is visible on white
+                //color: Colors.black, // Ensure text is visible on white
               ),
             ),
             const SizedBox(height: 20),
@@ -72,13 +72,13 @@ class _LoginPageState extends State<LoginPage> {
               controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'Email',
-                labelStyle: TextStyle(color: Colors.black), // Label color
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
+                //labelStyle: TextStyle(color: Colors.black), // Label color
+                //enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.grey),
+                //),
+                //focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.blue),
+                //),
               ),
             ),
             const SizedBox(height: 10),
@@ -87,19 +87,19 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
               decoration: const InputDecoration(
                 labelText: 'Password',
-                labelStyle: TextStyle(color: Colors.black), // Label color
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                ),
+                //labelStyle: TextStyle(color: Colors.black), // Label color
+                //enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.grey),
+                //),
+                //focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.blue),
+                //),
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _login,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              //style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: const Text('Login'),
             ),
             const SizedBox(height: 20),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: const Text(
                 'Don\'t have an account? Sign up',
-                style: TextStyle(color: Colors.blue), // Make link visible
+                //style: TextStyle(color: Colors.blue), // Make link visible
               ),
             ),
             const SizedBox(height: 50),

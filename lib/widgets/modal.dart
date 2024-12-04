@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 class CustomModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
-
-  const CustomModal({super.key, required this.firestore, required this.userId});
+  Function callbackUpdate;
+  CustomModal({super.key, required this.firestore, required this.userId, required this.callbackUpdate});
 
   @override
   State<CustomModal> createState() => _CustomModalState();
@@ -196,6 +196,7 @@ class _CustomModalState extends State<CustomModal> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Password added successfully')),
                 );
+                widget.callbackUpdate();
                 titleController.clear();
                 passwordController.clear();
                 noteController.clear();

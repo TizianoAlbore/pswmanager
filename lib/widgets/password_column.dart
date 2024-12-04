@@ -1,5 +1,8 @@
+import 'dart:js_interop';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pw_frontend/widgets/modal.dart';
 import '../utils/user_utils.dart';
 
 class PasswordColumn extends StatefulWidget {
@@ -17,6 +20,10 @@ class PasswordColumn extends StatefulWidget {
 }
 
 class _PasswordColumnState extends State<PasswordColumn> {
+
+  callbackUpdate() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +63,44 @@ class _PasswordColumnState extends State<PasswordColumn> {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemCount: passwordsList.length,
+                  itemCount: passwordsList.length + 1,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(passwordsList.values.elementAt(index)['title']),
+                    if(index == passwordsList.length) {
+                      return ListTile(
+                        trailing: IconButton(
+                          icon: const Icon(Icons.add_rounded),
+                          color: Colors.green[400],
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return CustomModal(firestore: widget.firestore, userId: widget.userId, callbackUpdate: callbackUpdate,);
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+                    return Column(
+                    children: [
+                      ListTile(
+                      title: Text(
+                        passwordsList.values.elementAt(index)['title'],
+                        style: TextStyle(
+                          color: (widget.selectedPasswordController.text == passwordsList.keys.elementAt(index))
+                          ? Colors.white
+                          : Colors.white70,
+                          ),
+                        ),
                       onTap: () {
                         setState(() {
                           widget.callback_selectedPassword(passwordsList.keys.elementAt(index));
                         });
                       },
+                      selected: widget.selectedPasswordController.text == passwordsList.keys.elementAt(index),
+                      selectedTileColor: Colors.grey[850],
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete),
+                        icon: const Icon(Icons.remove_rounded),
                         color: Colors.red[400],
                         onPressed: () async {
                           try {
@@ -82,8 +116,11 @@ class _PasswordColumnState extends State<PasswordColumn> {
                             );
                           }
                         },
+                        ),
                       ),
-                    );
+                    const Divider(),
+                    ],
+                  );
                   },
                 ),
               ),
