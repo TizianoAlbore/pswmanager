@@ -18,13 +18,21 @@ class PasswordDetail extends StatefulWidget {
 class _PasswordDetailState extends State<PasswordDetail> {
   bool isReadOnly = true;
   bool showEditIcons = false;
-  bool isPasswordVisible = false; // Stato per alternare la visibilità della password.
+  bool isPasswordVisible = false;
+  Map<String, TextEditingController> controllers = {};
 
- // Funzione per alternare la modalità di sola lettura.
-  _toggleReadOnly() {
-    setState(() {
-      isReadOnly = !isReadOnly;
-    });
+  void _updateControllers(Map<String, dynamic> passwords) {
+    List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
+    for (String key in orderedKeys) {
+      String value = passwords[key] ?? '';
+      if (controllers.containsKey(key)) {
+        // Aggiorna il valore del controller esistente
+        controllers[key]?.text = value;
+      } else {
+        // Crea un nuovo controller se non esiste
+        controllers[key] = TextEditingController(text: value);
+      }
+    }
   }
 
   // Funzione per capitalizzare la prima lettera della stringa.
@@ -84,7 +92,12 @@ class _PasswordDetailState extends State<PasswordDetail> {
               ],
             );
           }
-          passwords = passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] ?? {};
+          if (passwords['groups'][widget.selectedGroupController.text] != null &&
+          passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] != null) {
+            passwords = passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] ?? {};
+            // Aggiorna i controller con i nuovi valori
+            _updateControllers(passwords);
+          }
           return Column(
             children: [
               const Padding(
@@ -94,103 +107,164 @@ class _PasswordDetailState extends State<PasswordDetail> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    // Defining keys order
-                    List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
-                    String key = orderedKeys[index];
-                    String value = passwords[key] ?? '';
-                    TextEditingController fieldController = TextEditingController(text: value);
+              Flexible(
+                child: Column(
+                  children: [
+                    // Lista di card
+                    ListView.builder(
+                      shrinkWrap: true, // Adatta la lista al contenuto.
+                      physics: const NeverScrollableScrollPhysics(), // Disabilita lo scrolling interno.
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        // Defining keys order
+                        List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
+                        String key = orderedKeys[index];
+                        String value = passwords[key] ?? '';
+                        // Inizializza il controller se non esiste
+                        if (!controllers.containsKey(key)) {
+                          controllers[key] = TextEditingController(text: value);
+                        }
+                        TextEditingController fieldController = controllers[key]!;
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Card(
-                            margin: EdgeInsets.zero,
-                            color: const Color.fromARGB(255, 26, 24, 24),
-                            elevation: 0.0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 50.0, top: 5.0, right: 50.0, bottom: 3.0),
-                              child: StatefulBuilder(
-                                builder: (context, setFieldState) {
-                                  return TextField(
-                                    readOnly: isReadOnly,
-                                    obscureText: key == 'password' ? !isPasswordVisible : false,
-                                    decoration: InputDecoration(
-                                      labelText: _capitalizeFirstLetter(key),
-                                      labelStyle: const TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                      border: const OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Color.fromARGB(255, 26, 24, 24), // Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      suffixIcon: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          // Tasto visibilità per la password
-                                          if (key == 'password')
-                                            IconButton(
-                                              icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-                                              onPressed: () {
-                                                setFieldState(() {
-                                                  isPasswordVisible = !isPasswordVisible; // Alterna lo stato della visibilità.
-                                                });
-                                              },
-                                            ),
-                                          // Tasto copia negli appunti
-                                          IconButton(
-                                            icon: const Icon(Icons.copy),
-                                            onPressed: () async {
-                                              await Clipboard.setData(ClipboardData(text: fieldController.text));
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text('Copied to clipboard'),
-                                                ),
-                                              );
-                                            },
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 3.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Card(
+                                margin: EdgeInsets.zero,
+                                color: const Color.fromARGB(255, 26, 24, 24),
+                                elevation: 0.0,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 50.0, top: 5.0, right: 50.0, bottom: 3.0),
+                                  child: StatefulBuilder(
+                                    builder: (context, setFieldState) {
+                                      return TextField(
+                                        readOnly: !showEditIcons, // Campi modificabili solo in modalità Edit.
+                                        obscureText: key == 'password' ? !isPasswordVisible : false,
+                                        decoration: InputDecoration(
+                                          labelText: _capitalizeFirstLetter(key),
+                                          labelStyle: const TextStyle(
+                                            color: Colors.white,
                                           ),
-                                          // Tasto modifica, visibile solo in modalità Edit
-                                          if (showEditIcons)
-                                            IconButton(
-                                              icon: const Icon(Icons.edit),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _toggleReadOnly(); // Alterna la modalità di sola lettura.
-                                                });
-                                              },
+                                          border: const OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                              color: Color.fromARGB(255, 26, 24, 24),
                                             ),
-                                        ],
-                                      ),
-                                    ),
-                                    controller: fieldController,
-                                  );
-                                },
+                                          ),
+                                          suffixIcon: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              // Tasto visibilità per la password
+                                              if (key == 'password')
+                                                IconButton(
+                                                  icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                                                  onPressed: () {
+                                                    setFieldState(() {
+                                                      isPasswordVisible = !isPasswordVisible;
+                                                    });
+                                                  },
+                                                ),
+                                              // Tasto copia negli appunti
+                                              IconButton(
+                                                icon: const Icon(Icons.copy),
+                                                onPressed: () async {
+                                                  await Clipboard.setData(ClipboardData(text: fieldController.text));
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Copied to clipboard'),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        controller: fieldController,
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
+                        );
+                      },
+                    ),
+                    // Pulsanti Edit/Cancel e Update Details
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Pulsante Edit/Cancel
+                          ElevatedButton.icon(
+                            icon: Icon(showEditIcons ? Icons.cancel : Icons.edit),
+                            label: Text(showEditIcons ? "Cancel" : "Edit"),
+                            onPressed: () {
+                              setState(() {
+                                showEditIcons = !showEditIcons; // Alterna la visibilità delle icone di modifica.
+                                isReadOnly = !showEditIcons; // Attiva/disattiva la modalità di sola lettura.
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 10), // Spazio tra i pulsanti
+                          // Pulsante Update Details (solo in modalità Edit)
+                          if (showEditIcons)
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green, // Colore verde.
+                              ),
+                              onPressed: () async {
+                                try {
+                                  // Stampa i parametri per il debugging
+                                  print('Updating details with:');
+                                  print('ID: ${widget.selectedPasswordController.text}');
+                                  print('Group: ${widget.selectedGroupController.text}');
+                                  print('Title: ${controllers['title']?.text ?? ''}');
+                                  print('Username: ${controllers['username']?.text ?? ''}');
+                                  print('Password: ${controllers['password']?.text ?? ''}');
+                                  print('Note: ${controllers['Note']?.text ?? ''}');
+
+                                  // Chiama la funzione di aggiornamento
+                                  await updatePassword(
+                                    widget.selectedPasswordController.text,
+                                    controllers['title']?.text ?? '',
+                                    controllers['username']?.text ?? '',
+                                    controllers['password']?.text ?? '',
+                                    controllers['Note']?.text ?? '',
+                                    widget.selectedGroupController.text,
+                                    widget.firestore,
+                                    widget.userId,
+                                  );
+
+                                  // Mostra il messaggio di successo
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Details updated successfully!'),
+                                    ),
+                                  );
+
+                                  // Esci dalla modalità Edit
+                                  setState(() {
+                                    showEditIcons = false;
+                                    isReadOnly = true;
+                                  });
+                                } catch (e) {
+                                  // Mostra messaggio di errore
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error updating details: $e'),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text("Update Details"),
+                            ),
                         ],
                       ),
-                    );
-                  },
-                ),
-              ),
-              // Pulsante Edit/Cancel in fondo alla lista.
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton.icon(
-                  icon: Icon(showEditIcons ? Icons.cancel : Icons.edit),
-                  label: Text(showEditIcons ? "Cancel" : "Edit"),
-                  onPressed: () {
-                    setState(() {
-                      showEditIcons = !showEditIcons; // Alterna la visibilità delle icone di modifica.
-                    });
-                  },
+                    ),
+                  ],
                 ),
               ),
             ],

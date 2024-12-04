@@ -131,30 +131,52 @@ Future<void> deletePassword(String id, FirebaseFirestore firestore, String userI
   }
 }
 
-//update password entry in firestore
-Future<void> updatePassword(String id, String title, String username, String cryptPassword, String note, String group, FirebaseFirestore firestore, String userId) async {
-  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
-  if (userCollection.exists) {
+Future<void> updatePassword(
+  String id,
+  String title,
+  String username,
+  String cryptPassword,
+  String note,
+  String group,
+  FirebaseFirestore firestore,
+  String userId,
+) async {
+  try {
+    // Recupera la collezione utente
+    DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+
+    if (!userCollection.exists) {
+      throw Exception('User not found');
+    }
+
     Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
-    if ((userData['groups'] ?? {}).containsKey(group)) {
-      if ((userData['groups.$group'] ?? {}).containsKey(id)) {
-        Map<String, String> password = {
-          'title': title,
-          'username': username,
-          'password': cryptPassword,
-          'Note': note,
-        };
-        await firestore.collection('users').doc(userId).update({
-          'groups.$group.$id': password,
-        });
-      } else {
-        throw Exception('Entry not found');
-      }
-    } else {
+
+    // Verifica l'esistenza del gruppo
+    if (!(userData['groups'] ?? {}).containsKey(group)) {
       throw Exception('Group not found');
     }
-  } else {
-    throw Exception('User not found');
+
+    // Verifica l'esistenza dell'entry della password
+    if (!(userData['groups'][group] ?? {}).containsKey(id)) {
+      throw Exception('Entry not found');
+    }
+
+    // Aggiorna i dettagli della password
+    Map<String, String> password = {
+      'title': title,
+      'username': username,
+      'password': cryptPassword,
+      'Note': note,
+    };
+
+    await firestore.collection('users').doc(userId).update({
+      'groups.$group.$id': password,
+    });
+
+    print('Password updated successfully!');
+  } catch (e) {
+    print('Error in updatePassword: $e');
+    rethrow; // Propaga l'errore
   }
 }
 
