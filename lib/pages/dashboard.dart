@@ -6,7 +6,6 @@ import 'package:pw_frontend/widgets/group_column.dart';
 import 'package:pw_frontend/widgets/password_column.dart';
 import 'package:pw_frontend/widgets/password_detail.dart';
 
-
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -33,7 +32,6 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
     //final String userEmail = user?.email ?? 'Unknown Email';
@@ -55,7 +53,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 Scaffold.of(context).openDrawer();
               },
             );
-          }
+          },
         ),
       ),
       drawer: const DrawerWidget(),

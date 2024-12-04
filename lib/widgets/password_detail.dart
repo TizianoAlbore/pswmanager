@@ -51,7 +51,6 @@ class _PasswordDetailState extends State<PasswordDetail> {
           );
         } else {
           Map<String, dynamic> passwords = snapshot.data ?? {};
-          debugPrint('passwords: $passwords');
           if (  widget.selectedPasswordController.text.isEmpty ||
                 widget.selectedGroupController.text.isEmpty ||
                 passwords.isEmpty ||
@@ -68,7 +67,6 @@ class _PasswordDetailState extends State<PasswordDetail> {
             );
           }
           passwords = passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] ?? {};
-          debugPrint('passwords: $passwords');
           return Column(
             children: [
               const Padding(
