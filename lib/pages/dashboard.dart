@@ -30,49 +30,67 @@ class _DashboardPageState extends State<DashboardPage> {
   }
   
   @override
-  Widget build(BuildContext context) {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final User? user = FirebaseAuth.instance.currentUser;
-    final String userId = user?.uid ?? 'Unknown User ID';
-    //final String userEmail = user?.email ?? 'Unknown Email';
+Widget build(BuildContext context) {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final User? user = FirebaseAuth.instance.currentUser;
+  final String userId = user?.uid ?? 'Unknown User ID';
 
-    // Get the temporized passphrase from the arguments
-    //final String? temporizedPassphrase = ModalRoute.of(context)?.settings.arguments as String?;
-
-
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        automaticallyImplyLeading: false,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Dashboard'),
+      automaticallyImplyLeading: false,
+      leading: Builder(
+        builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          );
+        },
       ),
-      drawer: const DrawerWidget(),
-      body: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: GroupColumnPage(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, callback_selectedGroup: callback_selectedGroup), 
+    ),
+    drawer: const DrawerWidget(),
+    body: Row(
+      children: [
+        // GroupColumn sempre visibile
+        Expanded(
+          flex: 1,
+          child: GroupColumnPage(
+            firestore: firestore,
+            userId: userId,
+            selectedGroupController: _selectedGroupController,
+            callback_selectedGroup: callback_selectedGroup,
           ),
-          Expanded(
-            flex: 1,
-            child: PasswordColumn(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, selectedPasswordController: _selectedPasswordController, callback_selectedGroup: callback_selectedGroup, callback_selectedPassword: callback_selectedPassword),
-          ),
-          Expanded(
-            flex: 2,
-            child: PasswordDetail(firestore: firestore, userId: userId, selectedGroupController: _selectedGroupController, selectedPasswordController: _selectedPasswordController,), 
-          ),
-          ],
         ),
-    );
-  }
+
+        // PasswordColumn mostrato solo se un gruppo è selezionato
+        if (_selectedGroupController.text.isNotEmpty)
+          Expanded(
+            flex: 1,
+            child: PasswordColumn(
+              firestore: firestore,
+              userId: userId,
+              selectedGroupController: _selectedGroupController,
+              selectedPasswordController: _selectedPasswordController,
+              callback_selectedGroup: callback_selectedGroup,
+              callback_selectedPassword: callback_selectedPassword,
+            ),
+          ),
+
+        // PasswordDetail mostrato solo se un elemento del gruppo password è selezionato
+        if (_selectedPasswordController.text.isNotEmpty)
+          Expanded(
+            flex: 1,
+            child: PasswordDetail(
+              firestore: firestore,
+              userId: userId,
+              selectedGroupController: _selectedGroupController,
+              selectedPasswordController: _selectedPasswordController,
+            ),
+          ),
+      ],
+    ),
+  );
+}
 }
