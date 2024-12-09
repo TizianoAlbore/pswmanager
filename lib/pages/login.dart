@@ -2,6 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Reusable Theme Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: const TextTheme(
+          headline1: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          bodyText1: TextStyle(fontSize: 16, color: Colors.black),
+          button: TextStyle(color: Colors.white),
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.grey),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.blue, // Link text color
+          ),
+        ),
+      ),
+      home: const LoginPage(),
+      routes: {
+        '/signup': (context) => const SignUpPage(),
+        '/dashboard': (context) => const DashboardPage(),
+      },
+    );
+  }
+}
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -48,159 +97,75 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
-      body: Container(
-  //color: Colors.white, // Set background color to plain white
-  child: Center(
-    child: SizedBox(
-      width: 300,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                //color: Colors.black, // Ensure text is visible on white
-              ),
+      body: Center(
+        child: SizedBox(
+          width: 300,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'Login',
+                  style: Theme.of(context).textTheme.headline1,
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _login,
+                  child: const Text('Login'),
+                ),
+                const SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signup');
+                  },
+                  child: const Text('Don\'t have an account? Sign up'),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                //labelStyle: TextStyle(color: Colors.black), // Label color
-                //enabledBorder: UnderlineInputBorder(
-                  //borderSide: BorderSide(color: Colors.grey),
-                //),
-                //focusedBorder: UnderlineInputBorder(
-                  //borderSide: BorderSide(color: Colors.blue),
-                //),
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                //labelStyle: TextStyle(color: Colors.black), // Label color
-                //enabledBorder: UnderlineInputBorder(
-                  //borderSide: BorderSide(color: Colors.grey),
-                //),
-                //focusedBorder: UnderlineInputBorder(
-                  //borderSide: BorderSide(color: Colors.blue),
-                //),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              //style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-              child: const Text('Login'),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/signup');
-              },
-              child: const Text(
-                'Don\'t have an account? Sign up',
-                //style: TextStyle(color: Colors.blue), // Make link visible
-              ),
-            ),
-            const SizedBox(height: 50),
-          ],
+          ),
         ),
       ),
-    ),
-  ),
-),
-      // body: Stack(
-      //   children: [
-      //     // Background image
-      //     Positioned.fill(
-      //       child: Image.asset(
-      //         'assets/background.jpg', // Add your background image asset
-      //         fit: BoxFit.cover,
-      //       ),
-      //     ),
-      //     // Login form
-      //     Center(
-      //       child: SizedBox(
-      //         width: 300,
-      //         child: Padding(
-      //           padding: const EdgeInsets.symmetric(vertical: 40.0),
-      //           child: Column(
-      //             mainAxisSize: MainAxisSize.min,
-      //             crossAxisAlignment: CrossAxisAlignment.center,
-      //             children: [
-      //               const Text(
-      //                 'Login',
-      //                 style: TextStyle(
-      //                   fontSize: 24,
-      //                   fontWeight: FontWeight.bold,
-      //                   color: Colors.white, // Ensures login text is visible
-      //                 ),
-      //               ),
-      //               const SizedBox(height: 20),
-      //               TextField(
-      //                 controller: _emailController,
-      //                 style: TextStyle(color: Colors.black), // Text color
-      //                 decoration: const InputDecoration(
-      //                   labelText: 'Email',
-      //                   labelStyle: TextStyle(color: Colors.white), // Label color
-      //                   enabledBorder: UnderlineInputBorder(
-      //                     borderSide: BorderSide(color: Colors.white),
-      //                   ),
-      //                   focusedBorder: UnderlineInputBorder(
-      //                     borderSide: BorderSide(color: Colors.white),
-      //                   ),
-      //                 ),
-      //               ),
-      //               const SizedBox(height: 10),
-      //               TextField(
-      //                 controller: _passwordController,
-      //                 obscureText: true,
-      //                 style: TextStyle(color: Colors.black), // Text color
-      //                 decoration: const InputDecoration(
-      //                   labelText: 'Password',
-      //                   labelStyle: TextStyle(color: Colors.white), // Label color
-      //                   enabledBorder: UnderlineInputBorder(
-      //                     borderSide: BorderSide(color: Colors.white),
-      //                   ),
-      //                   focusedBorder: UnderlineInputBorder(
-      //                     borderSide: BorderSide(color: Colors.white),
-      //                   ),
-      //                 ),
-      //               ),
-      //               const SizedBox(height: 20),
-      //               ElevatedButton(
-      //                 onPressed: _login,
-      //                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue), // Button color
-      //                 child: const Text('Login'),
-      //               ),
-      //               const SizedBox(height: 20),
-      //               TextButton(
-      //                 onPressed: () {
-      //                   Navigator.pushNamed(context, '/signup');
-      //                 },
-      //                 child: const Text(
-      //                   'Don\'t have an account? Sign up',
-      //                   style: TextStyle(color: Colors.white), // Text color for the link
-      //                 ),
-      //               ),
-      //               const SizedBox(height: 50),
-      //             ],
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+    );
+  }
+}
+
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Sign Up')),
+      body: const Center(child: Text('Sign Up Page')),
+    );
+  }
+}
+
+class DashboardPage extends StatelessWidget {
+  const DashboardPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Dashboard')),
+      body: const Center(child: Text('Welcome to Dashboard')),
     );
   }
 }
