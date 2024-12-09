@@ -48,54 +48,159 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
       ),
-      body: Center(
-        child: SizedBox(
-          width: 300,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _login,
-                  child: const Text('Login'),
-                ),
-                const SizedBox(height: 20),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/signup');
-                  },
-                  child: const Text('Don\'t have an account? Sign up'),
-                ),
-              ],
+      body: Container(
+  //color: Colors.white, // Set background color to plain white
+  child: Center(
+    child: SizedBox(
+      width: 300,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 40.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text(
+              'Login',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                //color: Colors.black, // Ensure text is visible on white
+              ),
             ),
-          ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                //labelStyle: TextStyle(color: Colors.black), // Label color
+                //enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.grey),
+                //),
+                //focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.blue),
+                //),
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                //labelStyle: TextStyle(color: Colors.black), // Label color
+                //enabledBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.grey),
+                //),
+                //focusedBorder: UnderlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.blue),
+                //),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _login,
+              //style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              child: const Text('Login'),
+            ),
+            const SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/signup');
+              },
+              child: const Text(
+                'Don\'t have an account? Sign up',
+                //style: TextStyle(color: Colors.blue), // Make link visible
+              ),
+            ),
+            const SizedBox(height: 50),
+          ],
         ),
       ),
+    ),
+  ),
+),
+      // body: Stack(
+      //   children: [
+      //     // Background image
+      //     Positioned.fill(
+      //       child: Image.asset(
+      //         'assets/background.jpg', // Add your background image asset
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //     // Login form
+      //     Center(
+      //       child: SizedBox(
+      //         width: 300,
+      //         child: Padding(
+      //           padding: const EdgeInsets.symmetric(vertical: 40.0),
+      //           child: Column(
+      //             mainAxisSize: MainAxisSize.min,
+      //             crossAxisAlignment: CrossAxisAlignment.center,
+      //             children: [
+      //               const Text(
+      //                 'Login',
+      //                 style: TextStyle(
+      //                   fontSize: 24,
+      //                   fontWeight: FontWeight.bold,
+      //                   color: Colors.white, // Ensures login text is visible
+      //                 ),
+      //               ),
+      //               const SizedBox(height: 20),
+      //               TextField(
+      //                 controller: _emailController,
+      //                 style: TextStyle(color: Colors.black), // Text color
+      //                 decoration: const InputDecoration(
+      //                   labelText: 'Email',
+      //                   labelStyle: TextStyle(color: Colors.white), // Label color
+      //                   enabledBorder: UnderlineInputBorder(
+      //                     borderSide: BorderSide(color: Colors.white),
+      //                   ),
+      //                   focusedBorder: UnderlineInputBorder(
+      //                     borderSide: BorderSide(color: Colors.white),
+      //                   ),
+      //                 ),
+      //               ),
+      //               const SizedBox(height: 10),
+      //               TextField(
+      //                 controller: _passwordController,
+      //                 obscureText: true,
+      //                 style: TextStyle(color: Colors.black), // Text color
+      //                 decoration: const InputDecoration(
+      //                   labelText: 'Password',
+      //                   labelStyle: TextStyle(color: Colors.white), // Label color
+      //                   enabledBorder: UnderlineInputBorder(
+      //                     borderSide: BorderSide(color: Colors.white),
+      //                   ),
+      //                   focusedBorder: UnderlineInputBorder(
+      //                     borderSide: BorderSide(color: Colors.white),
+      //                   ),
+      //                 ),
+      //               ),
+      //               const SizedBox(height: 20),
+      //               ElevatedButton(
+      //                 onPressed: _login,
+      //                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue), // Button color
+      //                 child: const Text('Login'),
+      //               ),
+      //               const SizedBox(height: 20),
+      //               TextButton(
+      //                 onPressed: () {
+      //                   Navigator.pushNamed(context, '/signup');
+      //                 },
+      //                 child: const Text(
+      //                   'Don\'t have an account? Sign up',
+      //                   style: TextStyle(color: Colors.white), // Text color for the link
+      //                 ),
+      //               ),
+      //               const SizedBox(height: 50),
+      //             ],
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }
