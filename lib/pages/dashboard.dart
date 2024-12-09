@@ -55,7 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
       drawer: const DrawerWidget(),
       body: Container(
-        color: const Color(0xFFF5F5F5), // Off-white background
+        color: const Color(0xFF1A1818), // Dark background color
         child: Row(
           children: [
             // GroupColumn always visible
