@@ -6,36 +6,35 @@ class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key});
 
   @override
-  State<DrawerWidget> createState() => _DrawerWidgetState();
+  State<DrawerWidget> createState() => _DrawerWidget();
 }
 
-class _DrawerWidgetState extends State<DrawerWidget> {
-  String userName = "Loading...";
+class _DrawerWidget extends State<DrawerWidget> {
+  String _username = "Loading...";
 
   @override
   void initState() {
     super.initState();
-    _fetchUserName();
+    _fetchUsername();
   }
 
-  // Function to fetch the user's name from Firestore
-  Future<void> _fetchUserName() async {
-    try {
-      final User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+  Future<void> _fetchUsername() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final String userId = user.uid;
+      try {
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .get();
         setState(() {
-          userName = userDoc['name'] ?? "User"; // Replace 'name' with the actual field name in Firestore
+          _username = userDoc['name'] ?? "User"; // Ensure a fallback
         });
-      } else {
+      } catch (e) {
         setState(() {
-          userName = "Guest";
+          _username = "User"; // Fallback if data fetch fails
         });
       }
-    } catch (e) {
-      setState(() {
-        userName = "Error";
-      });
     }
   }
 
@@ -46,29 +45,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+            decoration: const BoxDecoration(
+              color: Color(0xFF1976D2), // Same blue as the dashboard header
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  userName,
-                  style: TextStyle(
-                    color: Theme.of(context).secondaryHeaderColor,
-                    fontSize: 24,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Welcome!',
-                  style: TextStyle(
-                    color: Theme.of(context).secondaryHeaderColor.withOpacity(0.8),
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+            child: Text(
+              'Welcome, $_username',
+              style: const TextStyle(
+                color: Colors.white, // High contrast text for accessibility
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           ListTile(
