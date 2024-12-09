@@ -10,12 +10,12 @@ import 'pages/settings.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-  await dotenv.load(fileName: ".env"); 
+    await dotenv.load(fileName: ".env");
   } catch (e) {
-  throw Exception('Error loading .env file: $e');
+    throw Exception('Error loading .env file: $e');
   }
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
 }
@@ -23,11 +23,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title:'Password Manager',
+      title: 'Password Manager',
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
@@ -38,14 +37,26 @@ class MyApp extends StatelessWidget {
       },
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color.fromARGB(255, 26, 24, 24),
+        scaffoldBackgroundColor: const Color(0xFF1A1818), // Dark background
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
-          seedColor: Colors.purple),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-            bodyLarge: TextStyle(fontSize: 18, color: Colors.white70),
-  ),
+          seedColor: Colors.teal, // Accessible color palette
+        ),
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Colors.white, // Text color for high contrast
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 18,
+            color: Colors.white70, // Lighter text for readability
+          ),
+        ),
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.teal, // Teal button for accessibility
+          textTheme: ButtonTextTheme.primary,
+        ),
       ),
     );
   }
