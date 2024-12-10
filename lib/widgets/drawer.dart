@@ -46,7 +46,7 @@ class _DrawerWidget extends State<DrawerWidget> {
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Color(0xFF1976D2), // Same blue as the dashboard header
+              color: Color(0xFF00796B), // Same blue as the dashboard header
             ),
             child: Text(
               'Welcome, $_username',
