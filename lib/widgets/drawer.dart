@@ -62,7 +62,6 @@ class _DrawerWidget extends State<DrawerWidget> {
             title: const Text('Dashboard'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/dashboard');
             },
           ),
           ListTile(
@@ -70,7 +69,7 @@ class _DrawerWidget extends State<DrawerWidget> {
             title: const Text('Settings'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/settings');
+              Navigator.pushNamed(context, '/settings');
             },
           ),
           ListTile(
@@ -78,7 +77,8 @@ class _DrawerWidget extends State<DrawerWidget> {
             title: const Text('Logout'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/');
+              FirebaseAuth.instance.signOut();
+              Navigator.pushNamed(context, '/');
             },
           ),
         ],

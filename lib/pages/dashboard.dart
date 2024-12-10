@@ -36,6 +36,12 @@ class _DashboardPageState extends State<DashboardPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
 
+    if (user == null) {
+      Future.microtask(() {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/');   
+      });  
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),

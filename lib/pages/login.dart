@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       _passwordTimer = Timer(const Duration(seconds: 10), () {
         _temporizedPassphrase = null;
       });
-      Navigator.pushReplacementNamed(
+      Navigator.pushNamed(
         context,
         '/dashboard',
         arguments: _temporizedPassphrase,
