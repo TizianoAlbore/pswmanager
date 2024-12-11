@@ -32,9 +32,19 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Column(
             children: [
-              Text(
-                '🗂️ Groups',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Icon(
+                  Icons.folder,
+                  color: Colors.yellow,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "Groups",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                ],
               ),
               CircularProgressIndicator(),
             ],
@@ -52,9 +62,19 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
             children: [
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "🗂️ Groups",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                  Icon(
+                    Icons.folder,
+                    color: Colors.yellow,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    "Groups",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  ],
                 ),
               ),
               Expanded(

@@ -10,32 +10,10 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidget extends State<DrawerWidget> {
-  String _username = "Loading...";
-
+  
   @override
   void initState() {
     super.initState();
-    _fetchUsername();
-  }
-
-  Future<void> _fetchUsername() async {
-    final User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final String userId = user.uid;
-      try {
-        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userId)
-            .get();
-        setState(() {
-          _username = userDoc['name'] ?? "User"; 
-        });
-      } catch (e) {
-        setState(() {
-          _username = "User"; 
-        });
-      }
-    }
   }
 
   @override
@@ -44,12 +22,12 @@ class _DrawerWidget extends State<DrawerWidget> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
+          const DrawerHeader(
             decoration: const BoxDecoration(
               color: Color(0xFF00796B), // Same blue as the dashboard header
             ),
-            child: Text(
-              'Welcome, $_username',
+            child:Text(
+              'Welcome',
               style: const TextStyle(
                 color: Colors.white, // High contrast text for accessibility
                 fontSize: 20,

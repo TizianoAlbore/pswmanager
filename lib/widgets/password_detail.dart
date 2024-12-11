@@ -49,21 +49,41 @@ class _PasswordDetailState extends State<PasswordDetail> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Column(
             children: [
+              Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Icon(
+                Icons.key,
+                color: Colors.yellow,
+              ),
+              SizedBox(width: 8),
               Text(
-                '🔑 Password Details',
+                "Password Details",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+              ],
+            ),
               CircularProgressIndicator(),
             ]
           );
         } else if (snapshot.hasError) {
           return const Column(
             children: [
+              Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Icon(
+                Icons.key,
+                color: Colors.yellow,
+              ),
+              SizedBox(width: 8),
               Text(
-                '🔑 Password Details',
+                "Password Details",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              Text('Error fetching data'),
+              ],
+            ),
+            Text('Error fetching data'),
             ]
           );
         } else {
@@ -77,9 +97,19 @@ class _PasswordDetailState extends State<PasswordDetail> {
               children: [
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    '🔑 Password Details',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Icon(
+                      Icons.key,
+                      color: Colors.yellow,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Password Details",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -102,10 +132,20 @@ class _PasswordDetailState extends State<PasswordDetail> {
             children: [
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "🔑 Password Details",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Icon(
+                      Icons.key,
+                      color: Colors.yellow,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Password Details",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    ],
+                  ),
               ),
               Flexible(
                 child: Column(

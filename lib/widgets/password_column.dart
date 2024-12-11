@@ -33,9 +33,19 @@ Widget build(BuildContext context) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const Column(
           children: [
-            Text(
-              '🔒 Group Passwords',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Icon(
+                Icons.lock,
+                color: Colors.yellow,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Group Passwords",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              ],
             ),
             CircularProgressIndicator(),
           ],
@@ -60,9 +70,19 @@ Widget build(BuildContext context) {
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text(
-                "🔒 Group Passwords",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                Icon(
+                  Icons.lock,
+                  color: Colors.yellow,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "Group Passwords",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                ],
               ),
             ),
             Expanded(
