@@ -20,7 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
       appBar: AppBar(
         title: const Text('Settings'),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF1976D2), // Accessible blue
         leading: Builder(
           builder: (context) {
             return IconButton(

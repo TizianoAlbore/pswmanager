@@ -140,18 +140,11 @@ class _PasswordDetailState extends State<PasswordDetail> {
                                   child: StatefulBuilder(
                                     builder: (context, setFieldState) {
                                       return TextField(
-                                        readOnly: !showEditIcons, // Campi modificabili solo in modalità Edit.
+                                        readOnly: !showEditIcons,
                                         obscureText: key == 'password' ? !isPasswordVisible : false,
                                         decoration: InputDecoration(
-                                          labelText: _capitalizeFirstLetter(key),
-                                          labelStyle: const TextStyle(
-                                            color: Colors.white,
-                                          ),
-                                          border: const OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                              color: Color.fromARGB(255, 26, 24, 24),
-                                            ),
-                                          ),
+                                         
+                                        
                                           suffixIcon: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -197,17 +190,24 @@ class _PasswordDetailState extends State<PasswordDetail> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Pulsante Edit/Cancel
-                          ElevatedButton.icon(
-                            icon: Icon(showEditIcons ? Icons.cancel : Icons.edit),
-                            label: Text(showEditIcons ? "Cancel" : "Edit"),
+                            // Pulsante Edit/Cancel
+                            ElevatedButton.icon(
+                            icon: Icon(showEditIcons ? Icons.cancel : Icons.edit,
+                              color: Colors.white,
+                            ),
+                            label: Text(showEditIcons ? "Cancel" : "Edit",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: showEditIcons ? Colors.red : const Color(0xFF00796B),
+                            ),
                             onPressed: () {
                               setState(() {
-                                showEditIcons = !showEditIcons; // Alterna la visibilità delle icone di modifica.
-                                isReadOnly = !showEditIcons; // Attiva/disattiva la modalità di sola lettura.
+                              showEditIcons = !showEditIcons; // Alterna la visibilità delle icone di modifica.
+                              isReadOnly = !showEditIcons; // Attiva/disattiva la modalità di sola lettura.
                               });
                             },
-                          ),
+                            ),
                           const SizedBox(width: 10), // Spazio tra i pulsanti
                           // Pulsante Update Details (solo in modalità Edit)
                           if (showEditIcons)
@@ -217,15 +217,6 @@ class _PasswordDetailState extends State<PasswordDetail> {
                               ),
                               onPressed: () async {
                                 try {
-                                  // Stampa i parametri per il debugging
-                                  print('Updating details with:');
-                                  print('ID: ${widget.selectedPasswordController.text}');
-                                  print('Group: ${widget.selectedGroupController.text}');
-                                  print('Title: ${controllers['title']?.text ?? ''}');
-                                  print('Username: ${controllers['username']?.text ?? ''}');
-                                  print('Password: ${controllers['password']?.text ?? ''}');
-                                  print('Note: ${controllers['Note']?.text ?? ''}');
-
                                   // Chiama la funzione di aggiornamento
                                   await updatePassword(
                                     widget.selectedPasswordController.text,
@@ -259,7 +250,9 @@ class _PasswordDetailState extends State<PasswordDetail> {
                                   );
                                 }
                               },
-                              child: const Text("Update Details"),
+                              child: const Text("Update Details",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                         ],
                       ),

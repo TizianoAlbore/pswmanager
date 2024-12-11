@@ -24,7 +24,6 @@ class _TotpPageState extends State<TotpPage> {
       appBar: AppBar(
         title: const Text('TOTP Manager'),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF1976D2), // Accessible blue
         leading: Builder(
           builder: (context) {
             return IconButton(

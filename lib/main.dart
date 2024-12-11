@@ -38,25 +38,34 @@ class MyApp extends StatelessWidget {
         '/totp': (context) => const TotpPage(),
       },
       theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF00796B),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey[900],
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 8.0, vertical: 8.0),
+        ),
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFF1A1818), // Dark background
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
-          seedColor: Colors.teal, // Accessible color palette
+          seedColor: const Color(0xFF00796B) // Accessible color palette
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Colors.white, // Text color for high contrast
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        color: Colors.white, // Text color for high contrast
           ),
           bodyLarge: TextStyle(
-            fontSize: 18,
-            color: Colors.white70, // Lighter text for readability
+        fontSize: 18,
+        color: Colors.white70, // Lighter text for readability
           ),
         ),
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.teal, // Teal button for accessibility
+        buttonTheme: const ButtonThemeData(
+          buttonColor: Color(0xFF00796B), // Teal button for accessibility
           textTheme: ButtonTextTheme.primary,
         ),
       ),

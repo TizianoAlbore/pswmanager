@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _login,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.teal), // Button color
+                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00796B)), // Button color
                     child: const Text(
                       'Login',
                       style: TextStyle(color: Colors.white), // Button text color
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text(
                       'Don\'t have an account? Sign up',
-                      style: TextStyle(color: Colors.teal), // Link color
+                      style: TextStyle(color: Color(0xFF00796B)), // Link color
                     ),
                   ),
                   const SizedBox(height: 50),
