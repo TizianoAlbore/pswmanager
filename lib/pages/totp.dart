@@ -3,6 +3,7 @@ import 'package:pw_frontend/utils/user_utils.dart';
 import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pw_frontend/widgets/totp_modal.dart';
 
 class TotpPage extends StatefulWidget {
   const TotpPage({super.key});
@@ -51,7 +52,7 @@ class _TotpPageState extends State<TotpPage> {
           padding: const EdgeInsets.all(8.0),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+              crossAxisCount: 4,
               crossAxisSpacing: 8.0,
               mainAxisSpacing: 8.0,
               ),
@@ -63,7 +64,12 @@ class _TotpPageState extends State<TotpPage> {
                     child: IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
-                        // Handle adding a new TOTP entry
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AddTotpModal(firestore: firestore, userId: userId);
+                          },
+                        );
                       },
                     ),
                   ),
