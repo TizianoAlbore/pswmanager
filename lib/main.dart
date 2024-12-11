@@ -6,6 +6,7 @@ import 'pages/login.dart';
 import 'pages/signup.dart';
 import 'pages/dashboard.dart';
 import 'pages/settings.dart';
+import 'pages/totp.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => const SignupPage(),
         '/dashboard': (context) => const DashboardPage(),
         '/settings': (context) => const SettingsPage(),
+        '/totp': (context) => const TotpPage(),
       },
       theme: ThemeData(
         useMaterial3: true,

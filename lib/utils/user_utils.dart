@@ -4,15 +4,73 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 Future<void> addUser(userCredential, firestore, emailController) async {
   String userId = userCredential.user!.uid;
 
+  // each group has a map of IDs linked to the passwords details
   Map<String, Map<String, Map<String, String>>> groups = {
     'General': {},
   };
+  //each totp entry has a map of IDs linked to the totp details
+  Map<String, Map<String, String>> totps = {};
+
   await firestore.collection('users').doc(userId).set({
     'email': emailController.text.trim(),
     'groups': groups,
+    'totps': totps,
   });
 }
 
+Future<void> addTotp(FirebaseFirestore firestore, String userId, String title, String secret) async {
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    Map<String, String> totp = {
+      'title': title,
+      'secret': secret,
+    };
+
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+
+    if (!(userData['totps'] ?? {}).containsKey(id)) {
+      await firestore.collection('users').doc(userId).update({
+        'totps.$id': totp,
+      });
+    } else {
+      throw Exception('ID already exists');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+}
+
+Future<void> deleteTotp(FirebaseFirestore firestore, String userId, String id) async {
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    if (userData['totps'].containsKey(id)) {
+      userData['totps'].remove(id);
+      await firestore.collection('users').doc(userId).update({
+        'totps': userData['totps'],
+      });
+    } else {
+      throw Exception('ID not found');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+}
+
+Future<List<String>> getTotp(FirebaseFirestore firestore, String userId) async {
+  List<String> totpEntries = [];
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    userData['totps'].forEach((key, value) {
+      totpEntries.add(value['title']);
+    });
+  } else {
+    throw Exception('User not found');
+  }
+  return totpEntries;
+}
 Future<Map<String, dynamic>> getUser(FirebaseFirestore firestore, String userId) async {
   Map<String, dynamic> data = {};
   await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {
@@ -173,9 +231,7 @@ Future<void> updatePassword(
       'groups.$group.$id': password,
     });
 
-    print('Password updated successfully!');
   } catch (e) {
-    print('Error in updatePassword: $e');
     rethrow; // Propaga l'errore
   }
 }

@@ -46,7 +46,7 @@ class _DashboardPageState extends State<DashboardPage> {
       appBar: AppBar(
         title: const Text('Dashboard'),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFF00796B), // Accessible teal
+        backgroundColor: const Color(0xFF1976D2), // Accessible blue
         leading: Builder(
           builder: (context) {
             return IconButton(
