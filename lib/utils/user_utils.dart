@@ -18,13 +18,33 @@ Future<void> addUser(userCredential, firestore, emailController) async {
   });
 }
 
-Future<void> addTotp(FirebaseFirestore firestore, String userId, String title, String secret) async {
+Future<Map<String, String>> getTotpDetails(FirebaseFirestore firestore, String userId, String id) async {
+  Map<String, String> totpDetail = {};
+  DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
+  if (userCollection.exists) {
+    Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
+    if ((userData['totps'] ?? {}).containsKey(id)) {
+      totpDetail = userData['totps.$id'];
+    } else {
+      throw Exception('ID not found');
+    }
+  } else {
+    throw Exception('User not found');
+  }
+  return totpDetail;
+}
+
+Future<void> addTotp(FirebaseFirestore firestore, String userId, String name, String service, String algorithm, int period, int digits, String secret) async {
   DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
   if (userCollection.exists) {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
-    Map<String, String> totp = {
-      'title': title,
+    Map<String, dynamic> totp = {
+      'name': name,
+      'service': service,
       'secret': secret,
+      'algorithm': algorithm,
+      'period': period,
+      'digits': digits,
     };
 
     Map<String, dynamic> userData = userCollection.data() as Map<String, dynamic>;
