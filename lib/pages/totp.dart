@@ -106,7 +106,10 @@ class _TotpPageState extends State<TotpPage> {
                                     period: totpEntry['period'],
                                     digits: totpEntry['digits'],
                     );
-                    return TotpCard(totp: totp, remainingTimeNotifier: _remainingTimeNotifier);
+                    return TotpCard(totp: totp,
+                                    remainingTimeNotifier: _remainingTimeNotifier,
+                                    name: totpEntry['name'],
+                                    service: totpEntry['service']);
                   }
                 },
               ),

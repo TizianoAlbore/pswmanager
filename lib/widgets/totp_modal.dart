@@ -33,7 +33,7 @@ class _AddTotpModalState extends State<AddTotpModal> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       try {
-        addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, _secretController.text, _period, _digits, _algorithm);
+        addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, _algorithm, _period, _digits, _secretController.text);
         Navigator.of(context).pop({
           'name': _nameController.text,
           'service': _serviceController.text,

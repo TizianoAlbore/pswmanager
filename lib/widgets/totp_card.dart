@@ -3,9 +3,11 @@ import 'package:pw_frontend/utils/totp/totp.dart';
 
 class TotpCard extends StatefulWidget {
   final Totp totp;
+  final String name;
+  final String service;
   final ValueNotifier<int> remainingTimeNotifier;
 
-  const TotpCard({required this.totp, required this.remainingTimeNotifier, Key? key}) : super(key: key);
+  const TotpCard({required this.totp, required this.remainingTimeNotifier, required this.name, required this.service, super.key});
 
   @override
   _TotpCardState createState() => _TotpCardState();
@@ -41,6 +43,8 @@ class _TotpCardState extends State<TotpCard> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(_totpCode),
+          Text('Name: ${widget.name}'),
+          Text('Service: ${widget.service}'),
           TotpProgressBar(remainingTimeNotifier: widget.remainingTimeNotifier),
         ],
       ),
