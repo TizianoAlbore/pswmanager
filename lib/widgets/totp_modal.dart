@@ -20,7 +20,7 @@ class _AddTotpModalState extends State<AddTotpModal> {
   bool _isSecretVisible = false;
   int _period = 30;
   int _digits = 6;
-  String _algorithm = 'SHA1';
+  // String _algorithm = 'SHA1';
 
   @override
   void dispose() {
@@ -33,14 +33,14 @@ class _AddTotpModalState extends State<AddTotpModal> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       try {
-        addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, _algorithm, _period, _digits, _secretController.text);
+        addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, /* _algorithm,*/ _period, _digits, _secretController.text);
         Navigator.of(context).pop({
           'name': _nameController.text,
           'service': _serviceController.text,
           'secret': _secretController.text,
           'period': _period,
           'digits': _digits,
-          'algorithm': _algorithm,
+          // 'algorithm': _algorithm,
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('TOTP added'))
@@ -183,27 +183,27 @@ class _AddTotpModalState extends State<AddTotpModal> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: DropdownButtonFormField<String>(
-                        value: _algorithm,
-                        decoration: const InputDecoration(
-                          labelText: 'Algorithm',
-                          prefixIcon: Icon(Icons.security),
-                        ),
-                        items: ['SHA1', 'SHA256', 'SHA512'].map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _algorithm = value!;
-                          });
-                        },
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    //   child: DropdownButtonFormField<String>(
+                    //     value: _algorithm,
+                    //     decoration: const InputDecoration(
+                    //       labelText: 'Algorithm',
+                    //       prefixIcon: Icon(Icons.security),
+                    //     ),
+                    //     items: ['SHA1', 'SHA256', 'SHA512'].map((String value) {
+                    //       return DropdownMenuItem<String>(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (value) {
+                    //       setState(() {
+                    //         _algorithm = value!;
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ],

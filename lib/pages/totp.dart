@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pw_frontend/utils/totp/totp.dart';
+import 'package:pw_frontend/utils/totp/totp2.dart';
+
 import 'package:pw_frontend/utils/user_utils.dart';
 import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -68,7 +69,8 @@ class _TotpPageState extends State<TotpPage> {
             return Text('Error: ${snapshot.error}');
           } else {
             Map<String, dynamic> user = snapshot.data ?? {};
-            List<String> totpEntries = (user['totps'] ?? {}).keys.toList();
+            List<dynamic> totpEntriesDynamic = user['totps']?.keys.toList() ?? [];
+            List<String> totpEntries = totpEntriesDynamic.cast<String>();
             totpEntries.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
             return Padding(
               padding: const EdgeInsets.all(8.0),
@@ -98,13 +100,13 @@ class _TotpPageState extends State<TotpPage> {
                     );
                   } else {
                     Map<String, dynamic> totpEntry = user['totps'][totpEntries[index]];  
-                    Totp totp = Totp(secret: totpEntry['secret']!.codeUnits,
-                                    algorithm: Algorithm.values.firstWhere(
-                                      (e) => e.toString().split('.').last == totpEntry['algorithm'],
-                                      orElse: () => Algorithm.sha1,
-                                    ),
+                    Totp totp = Totp(secret: totpEntry['secret']!,
+                                    // algorithm: Algorithm.values.firstWhere(
+                                    //   (e) => e.toString().split('.').last == totpEntry['algorithm'],
+                                    //   orElse: () => Algorithm.sha1,
+                                    // ),
                                     period: totpEntry['period'],
-                                    digits: totpEntry['digits'],
+                                    length: totpEntry['digits'],
                     );
                     return TotpCard(totp: totp,
                                     remainingTimeNotifier: _remainingTimeNotifier,

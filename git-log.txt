@@ -1,0 +1,108 @@
+* 224fdaa change color icons
+* 2f2a6af add cancel icon to newGroup field
+* f91cb6f change some text theme
+* 808a44b add totp modal
+* f972ef2 totp page initialization
+* 64fbd81 color_fix2
+* c9e8483 color_fix
+* 9f6db50 fix navigation
+* c92805c sidebar_color_errorfix
+* b171029 sidebar_changes
+* 218fc23 font_bg_fixes
+* fa589b6 theme_update1
+* c66d946 Revert "themeupdated"
+* 5970568 themeupdated
+* 1281ee5 Revert "theme_added"
+* 1786d40 theme_added
+* dd97849 columns order fixed, restyling
+* 54a04d9 update password now working
+* 6897152 password details improvement
+* 4f2c14c progress in style
+*   d0805b2 Merge with dashboard changes
+|\  
+| * d54810c removedbgfornow_login
+| * 124d451 colors5
+| * 1718de8 color4login
+| * 91dae56 color_3
+| * b194a0b Revert "dash_login3"
+| * 7870ba2 dash_login3
+| * b476c17 dash_color2
+| * 6868c53 dashboard_color
+| * cb273b4 colored_login_dash
+| * 8b70206 ete_dash
+* | a1b98b4 separated components of dashboard
+|/  
+* 69d9937 fix router root
+* 04c4fe5 put some colors
+* c237d5f progress in dashboard
+* 4b54892 Added totp and test func for totp
+*   95a831e Merge pull request #1 from TizianoAlbore/master
+|\  
+| * 48ff7dc login and signup small restyling
+|/  
+* 7ce0d8c add group modal
+* 35c781e groupController default value
+* d3f653b solved group bug and add remove functionality
+*   d335891 Merge branch 'test'
+|\  
+| * 3c744d5 todo: finish group column
+| *   ac52a00 Merge branch 'test' of https://github.com/TizianoAlbore/pswmanager into test
+| |\  
+| | * b5d7c6f test1
+| | * d3c47ec test1
+* | | a7570f1 Revert "rename_dashboard"
+|/ /  
+* / fbe54c7 rename_dashboard
+|/  
+* a9b44df init drawer and settings page
+* 459934c created update_masterPassphrase
+* c798711 add CRUD operations
+*   e77d5db Created nullable temporized masterpasshprase
+|\  
+| * 7d1d8d3 add group selection to modal
+| * 6793e4a fix build error, TODO: group field
+* | d97b43c Created nullable temporized masterpasshprase
+|/  
+* 80d5bf6 things..
+*   5aaa889 Merge branch 'main' of https://github.com/TizianoAlbore/pswmanager
+|\  
+| * 2539d34 Cleaned repo structure
+* | 76a30a3 modify modal
+|/  
+* f6cff09 revert dashboard changes
+* 1f335b3 etendra_251124
+*   f353ff0 Merge branch 'main' of https://github.com/TizianoAlbore/pswmanager
+|\  
+| * c017d15 Solved possible vulnerabilities with encryption methods
+| * 816206b solved encryption problems
+| * f2371ea insert passwd option on modal
+| * 3913574 error check on modal
+| *   7e41944 Merge branch 'main' of https://github.com/TizianoAlbore/pswmanager
+| |\  
+| | * 9b2c71f added psw gen utils, encryption utils
+| * | 014dd83 added custom modal
+| |/  
+* | 4ab934f updated dash
+* | 8546d0a etendra_211124
+|/  
+* 3800764 try generate password implementation
+* f398608 removed garbage
+* fb4bdbf removed garbage
+* 54b54c7 remove garbage
+* d567125 basic addPassword functionality added
+*   9caae64 addUser function
+|\  
+| * c473189 user data in dashboard
+* | 81f640b addUser function
+|/  
+* 53015e6 Firestore, FirebaseAuth
+* cc85ae1 Setting basic firebase
+* a884c68 Login, Signup and Dashboard
+* e0c53a8 Test di push
+* 04caa34 Update README.md
+* 5c0b7ce Create requirements.txt
+* ae0633a Add files via upload
+* e1b129e Create README.md
+* 41e63bd Initial Flutter setup
+* b017ded Initial Flutter setup
+* afd94b9 Initial commit

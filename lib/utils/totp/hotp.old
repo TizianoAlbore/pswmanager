@@ -1,7 +1,9 @@
 import 'dart:math' as math;
+
 import 'package:base32/base32.dart' show base32;
 import 'package:base32/encodings.dart' show Encoding;
 import 'package:crypto/crypto.dart' as crypto;
+
 export 'package:base32/base32.dart' show base32;
 export 'package:base32/encodings.dart' show Encoding;
 
@@ -46,7 +48,7 @@ class Hotp {
   /// HMAC-based One-time Password (HOTP) secret key.
   final List<int> secret;
 
-  /// Create a HOTP instance from [secret].
+
   Hotp({
     required this.secret,
     this.algorithm = Algorithm.sha1,

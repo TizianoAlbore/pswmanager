@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pw_frontend/utils/totp/totp.dart';
+import 'package:pw_frontend/utils/totp/totp2.dart';
 
 class TotpCard extends StatefulWidget {
   final Totp totp;
@@ -13,12 +13,12 @@ class TotpCard extends StatefulWidget {
   _TotpCardState createState() => _TotpCardState();
 }
 class _TotpCardState extends State<TotpCard> {
-  late String _totpCode;
+  late int _totpCode;
 
   @override
   void initState() {
     super.initState();
-    _totpCode = widget.totp.now();
+    _totpCode = widget.totp.generateTOTPCode();
     widget.remainingTimeNotifier.addListener(_updateTotpCode);
   }
 
@@ -31,7 +31,7 @@ class _TotpCardState extends State<TotpCard> {
   void _updateTotpCode() {
     if (widget.remainingTimeNotifier.value == 0) {
       setState(() {
-        _totpCode = widget.totp.now();
+         _totpCode = widget.totp.generateTOTPCode();
       });
     }
   }
@@ -42,7 +42,7 @@ class _TotpCardState extends State<TotpCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(_totpCode),
+          Text(_totpCode.toString()),
           Text('Name: ${widget.name}'),
           Text('Service: ${widget.service}'),
           TotpProgressBar(remainingTimeNotifier: widget.remainingTimeNotifier),

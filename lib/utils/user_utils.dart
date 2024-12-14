@@ -34,7 +34,7 @@ Future<Map<String, String>> getTotpDetails(FirebaseFirestore firestore, String u
   return totpDetail;
 }
 
-Future<void> addTotp(FirebaseFirestore firestore, String userId, String name, String service, String algorithm, int period, int digits, String secret) async {
+Future<void> addTotp(FirebaseFirestore firestore, String userId, String name, String service, /*String algorithm,*/ int period, int digits, String secret) async {
   DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
   if (userCollection.exists) {
     String id = DateTime.now().millisecondsSinceEpoch.toString();
@@ -42,7 +42,7 @@ Future<void> addTotp(FirebaseFirestore firestore, String userId, String name, St
       'name': name,
       'service': service,
       'secret': secret,
-      'algorithm': algorithm,
+      // 'algorithm': algorithm,
       'period': period,
       'digits': digits,
     };
