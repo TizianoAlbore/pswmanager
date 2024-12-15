@@ -11,26 +11,7 @@ import 'pages/totp.dart';
 
 // Global ValueNotifier for dynamic theme updates
 final ValueNotifier<ThemeData> currentThemeNotifier = ValueNotifier<ThemeData>(
-  ThemeData(
-    brightness: Brightness.dark,
-    useMaterial3: true,
-    scaffoldBackgroundColor: const Color(0xFF1A1818),
-    colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.dark,
-      seedColor: const Color(0xFF00796B),
-    ),
-    textTheme: const TextTheme(
-      displayLarge: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 18,
-        color: Colors.white70,
-      ),
-    ),
-  ),
+  _getTheme('dark'), // Default to dark theme
 );
 
 void main() async {
@@ -49,23 +30,29 @@ void main() async {
   // Load saved theme preference
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   final String themePreference = prefs.getString('theme') ?? 'dark';
-  updateTheme(themePreference);
+  currentThemeNotifier.value = _getTheme(themePreference);
 
   runApp(const MyApp());
 }
 
-// Function to update the theme based on user preference
-void updateTheme(String theme) {
-  ThemeData selectedTheme;
+// Helper function to fetch theme based on preference
+ThemeData _getTheme(String theme) {
   switch (theme) {
     case 'light':
-      selectedTheme = ThemeData(
+      return ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFFFFFFF),
+        scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light background
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
-          seedColor: const Color(0xFF00796B),
+          seedColor: const Color(0xFF00796B), // Teal
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF00796B),
+          foregroundColor: Colors.white,
+        ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Color(0xFFF5F5F5), // Light sidebar background
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
@@ -79,15 +66,20 @@ void updateTheme(String theme) {
           ),
         ),
       );
-      break;
     case 'colorblind':
-      selectedTheme = ThemeData(
+      return ThemeData(
         useMaterial3: true,
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFE6F5F1),
+        scaffoldBackgroundColor: const Color(0xFFE6F5F1), // Off-white teal tint
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.light,
           seedColor: const Color(0xFF00796B),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF00796B),
+          foregroundColor: Colors.white,
+        ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Color(0xFFE6F5F1), // Teal tint for sidebar
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
@@ -101,15 +93,21 @@ void updateTheme(String theme) {
           ),
         ),
       );
-      break;
     default: // Dark theme
-      selectedTheme = ThemeData(
+      return ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1A1818),
+        scaffoldBackgroundColor: const Color(0xFF1A1818), // Dark background
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
           seedColor: const Color(0xFF00796B),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF00796B),
+          foregroundColor: Colors.white,
+        ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Color(0xFF1A1818), // Dark sidebar background
         ),
         textTheme: const TextTheme(
           displayLarge: TextStyle(
@@ -123,9 +121,7 @@ void updateTheme(String theme) {
           ),
         ),
       );
-      break;
   }
-  currentThemeNotifier.value = selectedTheme;
 }
 
 class MyApp extends StatelessWidget {
