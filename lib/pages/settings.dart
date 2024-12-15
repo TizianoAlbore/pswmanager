@@ -23,20 +23,18 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadThemePreference();
   }
 
-  // Load saved theme preference from SharedPreferences
   Future<void> _loadThemePreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedTheme = prefs.getString('theme') ?? 'dark'; // Default to dark
+      _selectedTheme = prefs.getString('theme') ?? 'dark';
     });
   }
 
-  // Save the theme preference to SharedPreferences and update the global theme
   Future<void> _saveThemePreference(String theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', theme);
 
-    // Update the global theme immediately
+    // Update the global theme
     updateTheme(theme);
   }
 
@@ -82,11 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await changePassword(
-                  context, 
-                  _oldpasswordController.text, 
-                  _newpasswordController.text
-                );
+                await changePassword(context, _oldpasswordController.text, _newpasswordController.text);
               },
               child: const Text('Change Password'),
             ),
