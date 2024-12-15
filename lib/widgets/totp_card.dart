@@ -36,25 +36,15 @@ class TotpCardState extends State<TotpCard> {
   void initState() {
     super.initState();
     _totpCode = widget.totp.generateTOTPCode();
-    widget.remainingTimeNotifier.addListener(_updateTotpCode);
     _nameController = TextEditingController(text: widget.name);
     _serviceController = TextEditingController(text: widget.service);
   }
 
   @override
   void dispose() {
-    widget.remainingTimeNotifier.removeListener(_updateTotpCode);
     _nameController.dispose();
     _serviceController.dispose();
     super.dispose();
-  }
-
-  void _updateTotpCode() {
-    if (widget.remainingTimeNotifier.value == 0) {
-      setState(() {
-        _totpCode = widget.totp.generateTOTPCode();
-      });
-    }
   }
 
   void _copyToClipboard() {

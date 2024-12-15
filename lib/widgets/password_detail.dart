@@ -9,8 +9,9 @@ class PasswordDetail extends StatefulWidget {
   final String userId;
   final TextEditingController selectedGroupController;
   final TextEditingController selectedPasswordController;
+  Function updatePasswordList;
 
-  const PasswordDetail({Key? key, required this.firestore, required this.userId, required this.selectedGroupController, required this.selectedPasswordController}) : super(key: key);
+  PasswordDetail({super.key, required this.firestore, required this.userId, required this.selectedGroupController, required this.selectedPasswordController, required this.updatePasswordList});
   @override
   State<PasswordDetail> createState() => _PasswordDetailState();
 }
@@ -268,7 +269,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
                                     widget.firestore,
                                     widget.userId,
                                   );
-
+                                  widget.updatePasswordList();
                                   // Mostra il messaggio di successo
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

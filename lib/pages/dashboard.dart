@@ -97,6 +97,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   userId: userId,
                   selectedGroupController: _selectedGroupController,
                   selectedPasswordController: _selectedPasswordController,
+                  updatePasswordList: () {
+                    setState(() {
+                    });
+                  },
                 ),
               ),
           ],
