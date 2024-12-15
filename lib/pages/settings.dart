@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/update_masterPassphrase.dart';
 import '../widgets/drawer.dart';
 import '../main.dart'; // Import for theme updates
+import '../theme_helper.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -37,7 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setString('theme', theme);
 
     // Update the global theme immediately
-    currentThemeNotifier.value = _getTheme(theme);  // Directly call _getTheme from main.dart
+    currentThemeNotifier.value = getTheme(theme);
+
   }
 
   @override
