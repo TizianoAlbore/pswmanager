@@ -37,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setString('theme', theme);
 
     // Update the global theme immediately
-    currentThemeNotifier.value = _getTheme(theme);  // Update theme directly using global ValueNotifier
+    currentThemeNotifier.value = _getTheme(theme);  // Directly call _getTheme from main.dart
   }
 
   @override
