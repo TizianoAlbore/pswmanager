@@ -6,13 +6,14 @@ import '../utils/user_utils.dart';
 class AddTotpModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
-  const AddTotpModal({super.key, required this.firestore, required this.userId});
+  Function onAdding;
+  AddTotpModal({super.key, required this.firestore, required this.userId, required this.onAdding});
 
   @override
-  _AddTotpModalState createState() => _AddTotpModalState();
+  AddTotpModalState createState() => AddTotpModalState();
 }
 
-class _AddTotpModalState extends State<AddTotpModal> {
+class AddTotpModalState extends State<AddTotpModal> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _serviceController = TextEditingController();
@@ -20,7 +21,6 @@ class _AddTotpModalState extends State<AddTotpModal> {
   bool _isSecretVisible = false;
   int _period = 30;
   int _digits = 6;
-  // String _algorithm = 'SHA1';
 
   @override
   void dispose() {
@@ -30,10 +30,10 @@ class _AddTotpModalState extends State<AddTotpModal> {
     super.dispose();
   }
 
-  void _submit() {
+  void _submit() async{
     if (_formKey.currentState!.validate()) {
-      try {
-        addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, /* _algorithm,*/ _period, _digits, _secretController.text);
+      try{
+        await addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, /* _algorithm,*/ _period, _digits, _secretController.text);
         Navigator.of(context).pop({
           'name': _nameController.text,
           'service': _serviceController.text,
@@ -42,6 +42,7 @@ class _AddTotpModalState extends State<AddTotpModal> {
           'digits': _digits,
           // 'algorithm': _algorithm,
         });
+        widget.onAdding();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('TOTP added'))
         );
@@ -165,7 +166,6 @@ class _AddTotpModalState extends State<AddTotpModal> {
                                 prefixIcon: Icon(Icons.confirmation_number),
                               ),
                               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty || int.tryParse(value) == null) {
@@ -183,27 +183,6 @@ class _AddTotpModalState extends State<AddTotpModal> {
                         ),
                       ],
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    //   child: DropdownButtonFormField<String>(
-                    //     value: _algorithm,
-                    //     decoration: const InputDecoration(
-                    //       labelText: 'Algorithm',
-                    //       prefixIcon: Icon(Icons.security),
-                    //     ),
-                    //     items: ['SHA1', 'SHA256', 'SHA512'].map((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     onChanged: (value) {
-                    //       setState(() {
-                    //         _algorithm = value!;
-                    //       });
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 ),
               ],

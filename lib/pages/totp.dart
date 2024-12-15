@@ -26,7 +26,11 @@ class _TotpPageState extends State<TotpPage> {
     int initialRemainingTime = 30 - (DateTime.now().second % 30);
     _remainingTimeNotifier = ValueNotifier<int>(initialRemainingTime);
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
-      _remainingTimeNotifier.value = (_remainingTimeNotifier.value - 1) % 30;
+      int newValue = (_remainingTimeNotifier.value - 1) % 30;
+      if (newValue < 0) {
+        newValue += 30;
+      }
+      _remainingTimeNotifier.value = newValue;
     });
   }
 
@@ -74,51 +78,89 @@ class _TotpPageState extends State<TotpPage> {
             totpEntries.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 8.0,
-                  mainAxisSpacing: 8.0,
-                ),
-                itemCount: totpEntries.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == totpEntries.length) {
-                    return Card(
-                      child: Center(
-                        child: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AddTotpModal(firestore: firestore, userId: userId);
-                              },
-                            );
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  int crossAxisCount = constraints.maxWidth < 1000 ? 2 : 6;
+                  double cardSize = constraints.maxWidth < 1000 ? 50 : 100;
+                  return Column(
+                    children: [
+                      TotpProgressBar(remainingTimeNotifier: _remainingTimeNotifier),
+                      Expanded(
+                        child: GridView.builder(
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 8.0,
+                            mainAxisSpacing: 8.0,
+                            childAspectRatio: cardSize / cardSize,
+                          ),
+                          itemCount: totpEntries.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == totpEntries.length) {
+                              return Center(
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AddTotpModal(firestore: firestore,
+                                                            userId: userId,
+                                                            onAdding: () {
+                                                              setState(() {
+                                                              });
+                                                              },
+                                                            );
+                                      },
+                                    );
+                                  },
+                                  child: const Icon(Icons.add),
+                                ),
+                              );
+                            } else {
+                              Map<String, dynamic> totpEntry = user['totps'][totpEntries[index]];  
+                              Totp totp = Totp(secret: totpEntry['secret']!,
+                                              period: totpEntry['period'],
+                                              length: totpEntry['digits'],
+                              );
+                              return TotpCard(totp: totp,
+                                              remainingTimeNotifier: _remainingTimeNotifier,
+                                              name: totpEntry['name'],
+                                              service: totpEntry['service'],
+                                              id: totpEntries[index],
+                                              onDelete: () {
+                                                setState(() {
+                                                  totpEntries.removeAt(index);
+                                                });
+                                              });
+                            }
                           },
                         ),
                       ),
-                    );
-                  } else {
-                    Map<String, dynamic> totpEntry = user['totps'][totpEntries[index]];  
-                    Totp totp = Totp(secret: totpEntry['secret']!,
-                                    // algorithm: Algorithm.values.firstWhere(
-                                    //   (e) => e.toString().split('.').last == totpEntry['algorithm'],
-                                    //   orElse: () => Algorithm.sha1,
-                                    // ),
-                                    period: totpEntry['period'],
-                                    length: totpEntry['digits'],
-                    );
-                    return TotpCard(totp: totp,
-                                    remainingTimeNotifier: _remainingTimeNotifier,
-                                    name: totpEntry['name'],
-                                    service: totpEntry['service']);
-                  }
+                    ],
+                  );
                 },
               ),
             );
           }
         },
       ),
+    );
+  }
+}
+
+class TotpProgressBar extends StatelessWidget {
+  final ValueNotifier<int> remainingTimeNotifier;
+
+  const TotpProgressBar({required this.remainingTimeNotifier, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<int>(
+      valueListenable: remainingTimeNotifier,
+      builder: (context, remainingTime, child) {
+        return LinearProgressIndicator(
+          value: remainingTime / 30.0,
+        );
+      },
     );
   }
 }
