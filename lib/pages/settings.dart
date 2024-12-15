@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/update_masterPassphrase.dart';
 import '../widgets/drawer.dart';
+import '../main.dart'; // Import for theme updates
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,18 +23,19 @@ class _SettingsPageState extends State<SettingsPage> {
     _loadThemePreference();
   }
 
-  // Load saved theme preference from SharedPreferences
   Future<void> _loadThemePreference() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _selectedTheme = prefs.getString('theme') ?? 'dark'; // Default to dark theme
+      _selectedTheme = prefs.getString('theme') ?? 'dark';
     });
   }
 
-  // Save theme preference to SharedPreferences
   Future<void> _saveThemePreference(String theme) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', theme);
+
+    // Update the global theme
+    updateTheme(theme);
   }
 
   @override
