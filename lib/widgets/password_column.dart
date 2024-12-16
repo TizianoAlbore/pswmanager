@@ -13,6 +13,7 @@ class PasswordColumn extends StatefulWidget {
   Function callback_selectedGroup;
   Function callback_selectedPassword;
   final Color textColor; // Accept dynamic text color
+  final String temporizedPassword;
 
   PasswordColumn({
     super.key,
@@ -23,6 +24,7 @@ class PasswordColumn extends StatefulWidget {
     required this.callback_selectedGroup,
     required this.callback_selectedPassword,
     required this.textColor, // Pass text color
+    required this.temporizedPassword,
   });
 
   @override
@@ -111,6 +113,7 @@ class _PasswordColumnState extends State<PasswordColumn> {
                                   firestore: widget.firestore,
                                   userId: widget.userId,
                                   callbackUpdate: callbackUpdate,
+                                  temporizedPassword: widget.temporizedPassword,
                                 );
                               },
                             );

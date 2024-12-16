@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
+import 'package:pw_frontend/pages/dashboard.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -14,8 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String? _temporizedPassphrase;
-  Timer? _passwordTimer;
+  String _temporizedPassphrase = '';
+  //Timer? _passwordTimer;
 
   Future<void> _login() async {
     try {
@@ -26,14 +28,14 @@ class _LoginPageState extends State<LoginPage> {
 
       _temporizedPassphrase = _passwordController.text.trim();
 
-      _passwordTimer?.cancel();
-      _passwordTimer = Timer(const Duration(seconds: 10), () {
-        _temporizedPassphrase = null;
-      });
+      //_passwordTimer?.cancel();
+      //_passwordTimer = Timer(const Duration(seconds: 10), () {
+      //  _temporizedPassphrase = null;
+      //});
       Navigator.pushNamed(
         context,
         '/dashboard',
-        arguments: _temporizedPassphrase,
+        arguments: DashboardArguments(_temporizedPassphrase),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

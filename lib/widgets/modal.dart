@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:pw_frontend/utils/encrypt/aes.dart';
 import '../utils/password_utils.dart';
 import '../utils/user_utils.dart';
 import 'package:flutter/services.dart';
@@ -7,8 +8,9 @@ import 'package:flutter/services.dart';
 class CustomModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
+  final String temporizedPassword;
   Function callbackUpdate;
-  CustomModal({super.key, required this.firestore, required this.userId, required this.callbackUpdate});
+  CustomModal({super.key, required this.firestore, required this.userId, required this.callbackUpdate, required this.temporizedPassword});
 
   @override
   State<CustomModal> createState() => _CustomModalState();
@@ -184,10 +186,11 @@ class _CustomModalState extends State<CustomModal> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               try {
+                String cryptedPassword = await MyEncrypt.encrypt(passwordController.text, widget.temporizedPassword);
                 await addPassword(
                   titleController.text,
                   usernameController.text,
-                  passwordController.text, //TODO encrypt password
+                  cryptedPassword,
                   noteController.text,
                   groupController.text,
                   widget.firestore,
@@ -205,7 +208,7 @@ class _CustomModalState extends State<CustomModal> {
                 Navigator.of(context).pop();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to add password: ${e.toString()}')),
+                  SnackBar(content: Text('Failed to add password, maybe relogin: ${e.toString()}')),
                 );
               }
             }
