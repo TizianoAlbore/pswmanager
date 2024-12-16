@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/update_masterPassphrase.dart';
 import '../widgets/drawer.dart';
 import '../main.dart'; // Import for theme updates
-import 'pages/theme_helper.dart';
+import '../theme_helper.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
