@@ -78,10 +78,11 @@ class _SignupPageState extends State<SignupPage> {
 
   Future<void> _githubSignup() async {
     try {
-      final githubProvider = GithubAuthProvider();
-      UserCredential userCredential = await _auth.signInWithProvider(githubProvider);
+      // Usa signInWithPopup per Flutter Web
+      final GithubAuthProvider githubProvider = GithubAuthProvider();
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithPopup(githubProvider);
 
-      // Recupera i dettagli dell'utente GitHub
+      // Recupera l'email dell'utente
       String email = userCredential.user?.email ?? 'No email available';
 
       // Aggiungi l'utente al database Firestore
@@ -90,6 +91,7 @@ class _SignupPageState extends State<SignupPage> {
       // Naviga al dashboard
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
+      print('GitHub signup failed: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('GitHub signup failed: ${e.toString()}')),
       );
