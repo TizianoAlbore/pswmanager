@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:async';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:pw_frontend/pages/dashboard.dart';
 
@@ -17,7 +17,6 @@ class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String _temporizedPassphrase = '';
-  //Timer? _passwordTimer;
 
   Future<void> _login() async {
     try {
@@ -28,10 +27,6 @@ class _LoginPageState extends State<LoginPage> {
 
       _temporizedPassphrase = _passwordController.text.trim();
 
-      //_passwordTimer?.cancel();
-      //_passwordTimer = Timer(const Duration(seconds: 10), () {
-      //  _temporizedPassphrase = null;
-      //});
       Navigator.pushNamed(
         context,
         '/dashboard',
@@ -44,15 +39,54 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> _googleLogin() async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        final OAuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        await _auth.signInWithCredential(credential);
+
+        Navigator.pushReplacementNamed(context, '/dashboard');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google login failed: ${e.toString()}')),
+      );
+    }
+  }
+
+  Future<void> _githubLogin() async {
+    try {
+      final githubProvider = GithubAuthProvider();
+
+      await _auth.signInWithPopup(githubProvider); // Per Flutter Web
+
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('GitHub login failed: ${e.toString()}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.teal, // High contrast app bar
+        backgroundColor: Colors.teal,
       ),
       body: Container(
-        color: const Color(0xFF1A1818), // Dark background
+        color: const Color(0xFF1A1818),
         child: Center(
           child: SizedBox(
             width: 300,
@@ -67,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // White text for high contrast
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -75,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                     controller: _emailController,
                     decoration: const InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.white), // Label color
+                      labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
@@ -90,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.white), // Label color
+                      labelStyle: TextStyle(color: Colors.white),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                       ),
@@ -102,11 +136,28 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _login,
-                    style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00796B)), // Button color
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF00796B)),
                     child: const Text(
                       'Login',
-                      style: TextStyle(color: Colors.white), // Button text color
+                      style: TextStyle(color: Colors.white),
                     ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: _googleLogin,
+                    icon: const Icon(Icons.login, color: Colors.white),
+                    label: const Text('Login with Google'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton.icon(
+                    onPressed: _githubLogin,
+                    icon: const Icon(Icons.code, color: Colors.white),
+                    label: const Text('Login with GitHub'),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black),
                   ),
                   const SizedBox(height: 20),
                   TextButton(
@@ -115,10 +166,9 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text(
                       'Don\'t have an account? Sign up',
-                      style: TextStyle(color: Color(0xFF00796B)), // Link color
+                      style: TextStyle(color: Color(0xFF00796B)),
                     ),
                   ),
-                  const SizedBox(height: 50),
                 ],
               ),
             ),
