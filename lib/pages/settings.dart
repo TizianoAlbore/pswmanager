@@ -32,14 +32,41 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+  // Show a splash animation before applying the new theme
+  void _showThemeSplash(String theme) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return Center(
+          child: SizedBox(
+            width: 200,
+            height: 200,
+            child: Image.asset(
+              theme == 'colorblind' ? 'assets/images/blindness.png' 
+              : theme == 'light' ? 'assets/images/light_theme_icon.png'
+              : 'assets/images/dark_theme_icon.png', // Use proper paths
+              fit: BoxFit.contain,
+            ),
+          ),
+        );
+      },
+    );
+
+    // Wait for the animation duration (1 second) before updating
+    await Future.delayed(const Duration(seconds: 1));
+    Navigator.of(context).pop(); // Close the splash
+  }
+
   // Save the theme preference to SharedPreferences and update the global theme
   Future<void> _saveThemePreference(String theme) async {
+    _showThemeSplash(theme); // Trigger the splash effect
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('theme', theme);
 
     // Update the global theme immediately
     currentThemeNotifier.value = getTheme(theme);
-
   }
 
   @override
