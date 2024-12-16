@@ -12,7 +12,7 @@ class PasswordDetail extends StatefulWidget {
   final TextEditingController selectedPasswordController;
   final String temporizedPassword;
   Function updatePasswordList;
-  final Color textColor;
+  final Color textColor; // Accept text color dynamically
 
   PasswordDetail({
     super.key,
@@ -21,7 +21,7 @@ class PasswordDetail extends StatefulWidget {
     required this.selectedGroupController,
     required this.selectedPasswordController,
     required this.updatePasswordList,
-    required this.textColor,
+    required this.textColor, // Pass textColor as parameter
     required this.temporizedPassword,
   });
 
@@ -40,7 +40,10 @@ class _PasswordDetailState extends State<PasswordDetail> {
     for (String key in orderedKeys) {
       String value = passwords[key] ?? '';
       if (key == 'password') {
+        debugPrint('value before decrypt: $value');
+        debugPrint('temporizedPassword at password detail: ${widget.temporizedPassword}');
         value = await MyEncrypt.decrypt(widget.temporizedPassword, value);
+        debugPrint('value after decrypt: $value');
       }
       if (controllers.containsKey(key)) {
         controllers[key]?.text = value;
@@ -50,43 +53,42 @@ class _PasswordDetailState extends State<PasswordDetail> {
     }
   }
 
+  String _capitalizeFirstLetter(String input) {
+    if (input.isEmpty) return input;
+    return input[0].toUpperCase() + input.substring(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getUser(widget.firestore, widget.userId),
       builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
+          return const Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Password Details",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+                  Icon(Icons.key, color: Colors.yellow),
+                  SizedBox(width: 8),
+                  Text("Password Details", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
               ),
-              const CircularProgressIndicator(),
+              CircularProgressIndicator(),
             ],
           );
         } else if (snapshot.hasError) {
-          return Column(
+          return const Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
-                  const SizedBox(width: 8),
-                  Text(
-                    "Password Details",
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+                  Icon(Icons.key, color: Colors.yellow),
+                  SizedBox(width: 8),
+                  Text("Password Details", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 ],
               ),
-              Text('Error fetching data', style: Theme.of(context).textTheme.bodyLarge),
+              Text('Error fetching data'),
             ],
           );
         } else {
@@ -96,35 +98,31 @@ class _PasswordDetailState extends State<PasswordDetail> {
               passwords.isEmpty ||
               passwords['groups'][widget.selectedGroupController.text] == null ||
               passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] == null) {
-            return Column(
+            return const Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
-                      const SizedBox(width: 8),
-                      Text(
-                        "Password Details",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                      ),
+                      Icon(Icons.key, color: Colors.yellow),
+                      SizedBox(width: 8),
+                      Text("Password Details", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Select password to view details',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).hintColor),
-                  ),
-                ),
+                  padding: EdgeInsets.all(8.0),
+                  child: Text('Select password to view details', style: TextStyle(color: Colors.grey)),
+                )
               ],
             );
           }
-          passwords = passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] ?? {};
-          _updateControllers(passwords);
-
+          if (passwords['groups'][widget.selectedGroupController.text] != null &&
+              passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] != null) {
+            passwords = passwords['groups'][widget.selectedGroupController.text][widget.selectedPasswordController.text] ?? {};
+            _updateControllers(passwords);
+          }
           return Column(
             children: [
               const Padding(
@@ -134,80 +132,133 @@ class _PasswordDetailState extends State<PasswordDetail> {
                   children: [
                     Icon(Icons.key, color: Colors.yellow),
                     SizedBox(width: 8),
-                    Text(
-                      "Password Details",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                    Text("Password Details", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
               Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
-                    String key = orderedKeys[index];
-                    if (!controllers.containsKey(key)) {
-                      controllers[key] = TextEditingController(text: passwords[key] ?? '');
-                    }
-                    TextEditingController fieldController = controllers[key]!;
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
+                        String key = orderedKeys[index];
+                        String value = passwords[key] ?? '';
+                        if (!controllers.containsKey(key)) {
+                          controllers[key] = TextEditingController(text: value);
+                        }
+                        TextEditingController fieldController = controllers[key]!;
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Column(
-                        children: [
-                          Card(
-                            color: Theme.of(context).colorScheme.surface,
-                            elevation: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                readOnly: !showEditIcons,
-                                obscureText: key == 'password' ? !isPasswordVisible : false,
-                                decoration: InputDecoration(
-                                  labelText: _capitalizeFirstLetter(key),
-                                  labelStyle: TextStyle(color: widget.textColor),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (key == 'password')
-                                        IconButton(
-                                          icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-                                          onPressed: () {
-                                            setState(() {
-                                              isPasswordVisible = !isPasswordVisible;
-                                            });
-                                          },
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 3.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Card(
+                                margin: EdgeInsets.zero,
+                                color: const Color.fromARGB(255, 26, 24, 24),
+                                elevation: 0.0,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 50.0, top: 5.0, right: 50.0, bottom: 3.0),
+                                  child: StatefulBuilder(
+                                    builder: (context, setFieldState) {
+                                      return TextField(
+                                        readOnly: !showEditIcons,
+                                        obscureText: key == 'password' ? !isPasswordVisible : false,
+                                        decoration: InputDecoration(
+                                          suffixIcon: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              if (key == 'password')
+                                                IconButton(
+                                                  icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                                                  onPressed: () {
+                                                    setFieldState(() {
+                                                      isPasswordVisible = !isPasswordVisible;
+                                                    });
+                                                  },
+                                                ),
+                                              IconButton(
+                                                icon: const Icon(Icons.copy),
+                                                onPressed: () async {
+                                                  await Clipboard.setData(ClipboardData(text: fieldController.text));
+                                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Copied to clipboard')));
+                                                },
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      IconButton(
-                                        icon: Icon(Icons.copy, color: widget.textColor),
-                                        onPressed: () async {
-                                          await Clipboard.setData(ClipboardData(text: fieldController.text));
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Copied to clipboard')),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                        controller: fieldController,
+                                        style: TextStyle(color: widget.textColor),  // Set dynamic text color
+                                      );
+                                    },
                                   ),
                                 ),
-                                controller: fieldController,
-                                style: TextStyle(color: widget.textColor),
                               ),
-                            ),
+                            ],
                           ),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton.icon(
+                            icon: Icon(showEditIcons ? Icons.cancel : Icons.edit, color: Colors.white),
+                            label: Text(showEditIcons ? "Cancel" : "Edit", style: const TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: showEditIcons ? Colors.red : const Color(0xFF00796B),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                showEditIcons = !showEditIcons;
+                                isReadOnly = !showEditIcons;
+                              });
+                            },
+                          ),
+                          const SizedBox(width: 10),
+                          if (showEditIcons)
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                              onPressed: () async {
+                                try {
+                                  await updatePassword(
+                                    widget.selectedPasswordController.text,
+                                    controllers['title']?.text ?? '',
+                                    controllers['username']?.text ?? '',
+                                    controllers['password']?.text ?? '',
+                                    controllers['Note']?.text ?? '',
+                                    widget.selectedGroupController.text,
+                                    widget.firestore,
+                                    widget.userId,
+                                  );
+                                  widget.updatePasswordList();
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Details updated successfully!')));
+                                  setState(() {
+                                    showEditIcons = false;
+                                    isReadOnly = true;
+                                  });
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error updating details: $e')));
+                                }
+                              },
+                              child: const Text("Update Details", style: TextStyle(color: Colors.white)),
+                            ),
                         ],
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
             ],
           );
         }
-      },
+      }
     );
   }
 }

@@ -32,62 +32,64 @@ class PasswordColumn extends StatefulWidget {
 }
 
 class _PasswordColumnState extends State<PasswordColumn> {
+
   callbackUpdate() {
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
-
     return FutureBuilder(
       future: getUser(widget.firestore, widget.userId),
       builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
+          return const Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.lock, color: currentTheme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  const Text(
+                  Icon(
+                    Icons.lock,
+                    color: Colors.yellow,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
                     "Group Passwords",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              const CircularProgressIndicator(),
+              CircularProgressIndicator(),
             ],
           );
         } else if (snapshot.hasError) {
-          return Column(
+          return const Column(
             children: [
               Text(
                 'Select a group to view passwords',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: currentTheme.textTheme.bodyLarge?.color,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ],
           );
         } else {
           Map<String, dynamic> passwords = snapshot.data ?? {};
           Map<String, dynamic> passwordsList = passwords['groups'][widget.selectedGroupController.text] ?? {};
+
           List<String> sortedKeys = passwordsList.keys.toList()..sort();
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.lock, color: currentTheme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    const Text(
+                    Icon(
+                      Icons.lock,
+                      color: Colors.yellow,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
                       "Group Passwords",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
@@ -131,7 +133,7 @@ class _PasswordColumnState extends State<PasswordColumn> {
                             style: TextStyle(
                               color: (widget.selectedPasswordController.text == key)
                                   ? Colors.white
-                                  : widget.textColor,
+                                  : widget.textColor, // Apply dynamic text color
                             ),
                           ),
                           onTap: () {
@@ -140,7 +142,7 @@ class _PasswordColumnState extends State<PasswordColumn> {
                             });
                           },
                           selected: widget.selectedPasswordController.text == key,
-                          selectedTileColor: currentTheme.colorScheme.surfaceVariant,
+                          selectedTileColor: Colors.grey[850],
                           trailing: IconButton(
                             icon: const Icon(Icons.remove_rounded),
                             color: Colors.red[400],
