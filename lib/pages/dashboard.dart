@@ -5,13 +5,18 @@ import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:pw_frontend/widgets/group_column.dart';
 import 'package:pw_frontend/widgets/password_column.dart';
 import 'package:pw_frontend/widgets/password_detail.dart';
-import '../main.dart';  // Ensure correct import for theme helper
+import '../main.dart'; 
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
-
   @override
   _DashboardPageState createState() => _DashboardPageState();
+}
+
+class DashboardArguments {
+  final String temporizedPassword;
+
+  DashboardArguments(this.temporizedPassword);
 }
 
 class _DashboardPageState extends State<DashboardPage> {
@@ -24,7 +29,6 @@ class _DashboardPageState extends State<DashboardPage> {
       _selectedGroupController.text = newValue;
     });
   }
-
   callback_selectedPassword(newValue) {
     setState(() {
       _selectedPasswordController.text = newValue;
@@ -37,12 +41,16 @@ class _DashboardPageState extends State<DashboardPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
 
-    if (user == null) {
+    if (user == null){
       Future.microtask(() {
         Navigator.pop(context);
         Navigator.pushNamed(context, '/');   
       });
     }
+
+    final args = ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
+    final String temporizedPassword = args?.temporizedPassword ?? '';
+    debugPrint('temporizedPassword: $temporizedPassword');
 
     return Scaffold(
       appBar: AppBar(
@@ -95,6 +103,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       callback_selectedGroup: callback_selectedGroup,
                       callback_selectedPassword: callback_selectedPassword,
                       textColor: textColor,  // Pass textColor to PasswordColumn
+                      temporizedPassword: temporizedPassword,
                     ),
                   ),
 
@@ -111,6 +120,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         setState(() {});
                       },
                       textColor: textColor,  // Pass textColor to PasswordDetail
+                      temporizedPassword: temporizedPassword,
                     ),
                   ),
               ],

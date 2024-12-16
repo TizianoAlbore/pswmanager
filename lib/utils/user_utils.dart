@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pw_frontend/utils/encrypt/aes.dart';
 
 //add user to firestore
 Future<void> addUser(userCredential, firestore, emailController) async {

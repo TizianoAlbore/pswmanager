@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pw_frontend/utils/encrypt/aes.dart';
 import '../utils/user_utils.dart';
 
 class PasswordDetail extends StatefulWidget {
@@ -9,6 +10,7 @@ class PasswordDetail extends StatefulWidget {
   final String userId;
   final TextEditingController selectedGroupController;
   final TextEditingController selectedPasswordController;
+  final String temporizedPassword;
   Function updatePasswordList;
   final Color textColor; // Accept text color dynamically
 
@@ -20,6 +22,7 @@ class PasswordDetail extends StatefulWidget {
     required this.selectedPasswordController,
     required this.updatePasswordList,
     required this.textColor, // Pass textColor as parameter
+    required this.temporizedPassword,
   });
 
   @override
@@ -32,10 +35,16 @@ class _PasswordDetailState extends State<PasswordDetail> {
   bool isPasswordVisible = false;
   Map<String, TextEditingController> controllers = {};
 
-  void _updateControllers(Map<String, dynamic> passwords) {
+  void _updateControllers(Map<String, dynamic> passwords) async {
     List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
     for (String key in orderedKeys) {
       String value = passwords[key] ?? '';
+      if (key == 'password') {
+        debugPrint('value before decrypt: $value');
+        debugPrint('temporizedPassword at password detail: ${widget.temporizedPassword}');
+        value = await MyEncrypt.decrypt(widget.temporizedPassword, value);
+        debugPrint('value after decrypt: $value');
+      }
       if (controllers.containsKey(key)) {
         controllers[key]?.text = value;
       } else {
