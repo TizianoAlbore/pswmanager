@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:pw_frontend/utils/psw_holder.dart';
 import 'package:pw_frontend/pages/dashboard.dart';
 
 class LoginPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String _temporizedPassphrase = '';
+  // String _temporizedPassphrase = '';
 
   Future<void> _login() async {
     try {
@@ -25,12 +25,12 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
 
-      _temporizedPassphrase = _passwordController.text.trim();
+      final PasswordHolder _passwordHolder = PasswordHolder(_passwordController.text.trim());
 
       Navigator.pushNamed(
         context,
         '/dashboard',
-        arguments: DashboardArguments(_temporizedPassphrase),
+        arguments: DashboardArguments(_passwordHolder),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

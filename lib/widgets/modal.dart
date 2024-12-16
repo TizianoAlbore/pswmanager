@@ -186,7 +186,7 @@ class _CustomModalState extends State<CustomModal> {
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
               try {
-                String cryptedPassword = await MyEncrypt.encrypt(passwordController.text, widget.temporizedPassword);
+                String cryptedPassword = await MyEncrypt.encrypt(widget.temporizedPassword, passwordController.text);
                 await addPassword(
                   titleController.text,
                   usernameController.text,

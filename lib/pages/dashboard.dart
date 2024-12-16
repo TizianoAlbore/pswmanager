@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pw_frontend/utils/psw_holder.dart';
 import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:pw_frontend/widgets/group_column.dart';
 import 'package:pw_frontend/widgets/password_column.dart';
@@ -14,7 +15,7 @@ class DashboardPage extends StatefulWidget {
 }
 
 class DashboardArguments {
-  final String temporizedPassword;
+  final PasswordHolder temporizedPassword;
 
   DashboardArguments(this.temporizedPassword);
 }
@@ -49,8 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
     }
 
     final args = ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
-    final String temporizedPassword = args?.temporizedPassword ?? '';
-    debugPrint('temporizedPassword: $temporizedPassword');
+    final PasswordHolder temporizedPassword = args?.temporizedPassword ?? PasswordHolder('');
 
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +103,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       callback_selectedGroup: callback_selectedGroup,
                       callback_selectedPassword: callback_selectedPassword,
                       textColor: textColor,  // Pass textColor to PasswordColumn
-                      temporizedPassword: temporizedPassword,
+                      temporizedPassword: temporizedPassword.temporizedMasterPassphrase ?? '',
                     ),
                   ),
 
@@ -120,7 +120,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         setState(() {});
                       },
                       textColor: textColor,  // Pass textColor to PasswordDetail
-                      temporizedPassword: temporizedPassword,
+                      temporizedPassword: temporizedPassword.temporizedMasterPassphrase ?? '',
                     ),
                   ),
               ],
