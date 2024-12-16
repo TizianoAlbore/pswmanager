@@ -12,7 +12,7 @@ class PasswordDetail extends StatefulWidget {
   final TextEditingController selectedPasswordController;
   final String temporizedPassword;
   Function updatePasswordList;
-  final Color textColor;
+  final Color textColor; // Accept dynamic text color
 
   PasswordDetail({
     super.key,
@@ -48,6 +48,12 @@ class _PasswordDetailState extends State<PasswordDetail> {
         controllers[key] = TextEditingController(text: value);
       }
     }
+  }
+
+  // Capitalize the first letter of a string
+  String _capitalizeFirstLetter(String input) {
+    if (input.isEmpty) return input;
+    return input[0].toUpperCase() + input.substring(1);
   }
 
   @override
