@@ -7,6 +7,7 @@ class GroupColumnPage extends StatefulWidget {
   final String userId;
   final TextEditingController selectedGroupController;
   Function callback_selectedGroup;
+  final Color textColor; // Added textColor for dynamic theme updates
 
   GroupColumnPage({
     super.key,
@@ -14,6 +15,7 @@ class GroupColumnPage extends StatefulWidget {
     required this.userId,
     required this.selectedGroupController,
     required this.callback_selectedGroup,
+    required this.textColor, // Accept textColor as parameter
   });
 
   @override
@@ -35,15 +37,15 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                Icon(
-                  Icons.folder,
-                  color: Colors.yellow,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "Groups",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+                  Icon(
+                    Icons.folder,
+                    color: Colors.yellow,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    "Groups",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
               CircularProgressIndicator(),
@@ -65,15 +67,15 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Icon(
-                    Icons.folder,
-                    color: Colors.yellow,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Groups",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
+                    Icon(
+                      Icons.folder,
+                      color: Colors.yellow,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      "Groups",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ),
@@ -181,7 +183,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
                             style: TextStyle(
                               color: (widget.selectedGroupController.text == groups[index])
                                   ? Colors.white
-                                  : Colors.white70,
+                                  : widget.textColor, // Use dynamic textColor here
                             ),
                           ),
                           onTap: () {

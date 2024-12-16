@@ -64,6 +64,9 @@ class _DashboardPageState extends State<DashboardPage> {
       body: ValueListenableBuilder<ThemeData>(
         valueListenable: currentThemeNotifier,
         builder: (context, theme, child) {
+          // Determine the text color based on the selected theme
+          final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+
           return Container(
             color: theme.scaffoldBackgroundColor, // Dynamically change background color based on theme
             child: Row(
@@ -76,6 +79,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     userId: userId,
                     selectedGroupController: _selectedGroupController,
                     callback_selectedGroup: callback_selectedGroup,
+                    textColor: textColor,  // Pass textColor to GroupColumnPage
                   ),
                 ),
 
@@ -90,6 +94,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       selectedPasswordController: _selectedPasswordController,
                       callback_selectedGroup: callback_selectedGroup,
                       callback_selectedPassword: callback_selectedPassword,
+                      textColor: textColor,  // Pass textColor to PasswordColumn
                     ),
                   ),
 
@@ -105,6 +110,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       updatePasswordList: () {
                         setState(() {});
                       },
+                      textColor: textColor,  // Pass textColor to PasswordDetail
                     ),
                   ),
               ],
