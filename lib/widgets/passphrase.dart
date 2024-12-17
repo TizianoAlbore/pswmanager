@@ -16,36 +16,67 @@ class _PassphraseWidgetState extends State<PassphraseWidget> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Seleziona fino a 3 parole'),
+      title: const Text('Select your passphrase'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: words.map((word) {
-          return CheckboxListTile(
-            title: Text(word),
-            value: selectedWords.contains(word),
-            onChanged: (bool? selected) {
-              setState(() {
-                if (selected == true && selectedWords.length < 3) {
-                  selectedWords.add(word);
-                } else {
-                  selectedWords.remove(word);
-                }
-              });
-            },
-          );
-        }).toList(),
+        children: [
+          Wrap(
+            spacing: 8.0,
+            runSpacing: 8.0,
+            children: words.map((word) {
+              final isSelected = selectedWords.contains(word);
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (isSelected) {
+                      selectedWords.remove(word);
+                    } else if (selectedWords.length < 3) {
+                      selectedWords.add(word);
+                    }
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.blue : Colors.grey[300],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    word,
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 16),
+          // Mostra in tempo reale le parole selezionate
+          Text(
+            selectedWords.join(' '),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
       actions: [
-        TextButton(
-          onPressed: () {
-            widget.onSelected(selectedWords.join(' '));
-            Navigator.of(context).pop();
-          },
-          child: const Text('Conferma'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Annulla'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {
+                widget.onSelected(selectedWords.join(' '));
+                Navigator.of(context).pop();
+              },
+              child: const Text('Confirm'),
+            ),
+            const SizedBox(width: 16), // Spazio tra i due bottoni
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+          ],
         ),
       ],
     );
