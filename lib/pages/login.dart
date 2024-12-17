@@ -16,22 +16,66 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // String _temporizedPassphrase = '';
-
   Future<void> _login() async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-
-      final PasswordHolder _passwordHolder = PasswordHolder(_passwordController.text.trim());
-
-      Navigator.pushNamed(
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        double _time = 1.0;
+        return AlertDialog(
+      title: const Text('Choose Time Window'),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Slider(
+            value: _time,
+            min: 10.0,
+            max: 60.0,
+            divisions: 6,
+            label: '${_time.round()} min',
+            onChanged: (double value) {
+          setState(() {
+            _time = value;
+          });
+            },
+          ),
+          Text(
+            '${_time.round()} minutes',
+          ),
+        ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+        Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+        // Use the selected value
+        final int timeWindow = _time.round();
+        final PasswordHolder _passwordHolder = PasswordHolder(_passwordController.text.trim(), timeWindow);
+        Navigator.pushNamed(
         context,
         '/dashboard',
         arguments: DashboardArguments(_passwordHolder),
-      );
+        ) ;
+          },
+          child: const Text('OK'),
+        ),
+      ],
+        );
+      },
+    );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: ${e.toString()}')),

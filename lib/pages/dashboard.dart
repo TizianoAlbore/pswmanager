@@ -50,7 +50,7 @@ class _DashboardPageState extends State<DashboardPage> {
     }
 
     final args = ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
-    final PasswordHolder temporizedPassword = args?.temporizedPassword ?? PasswordHolder('');
+    final PasswordHolder temporizedPassword = args?.temporizedPassword ?? PasswordHolder('', 1);
 
     return Scaffold(
       appBar: AppBar(

@@ -37,7 +37,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.folder, color: Theme.of(context).colorScheme.secondary),
+                  const Icon(Icons.folder, color: Colors.yellow),
                   const SizedBox(width: 8),
                   Text(
                     "Groups",
@@ -63,7 +63,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.folder, color: Theme.of(context).colorScheme.secondary),
+                    const Icon(Icons.folder, color: Colors.yellow),
                     const SizedBox(width: 8),
                     Text(
                       "Groups",
