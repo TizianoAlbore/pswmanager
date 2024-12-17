@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pw_frontend/widgets/passphrase.dart';
 import '../utils/user_utils.dart';
 
 class SignupPage extends StatefulWidget {
@@ -98,6 +99,21 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
+  // meccanismo di suggerimento passphrase
+  void _openPassphraseDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => PassphraseWidget(
+        onSelected: (selectedWords) {
+          setState(() {
+            _passwordController.text = selectedWords;
+            _confirmPasswordController.text = selectedWords;
+          });
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +146,13 @@ class _SignupPageState extends State<SignupPage> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.lightbulb_outline),
+                        onPressed: _openPassphraseDialog,
+                      ),
+                    ),
                     obscureText: true,
                   ),
                   const SizedBox(height: 10),
