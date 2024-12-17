@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        double _time = 1.0;
+        double _time = 10.0;
         return AlertDialog(
       title: const Text('Choose Time Window'),
       content: StatefulBuilder(
