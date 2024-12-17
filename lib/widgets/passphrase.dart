@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/password_utils.dart'; // Import della funzione
 
 class PassphraseWidget extends StatefulWidget {
   final Function(String) onSelected;
@@ -10,8 +11,22 @@ class PassphraseWidget extends StatefulWidget {
 }
 
 class _PassphraseWidgetState extends State<PassphraseWidget> {
-  final List<String> words = ['ciao', 'test', 'prova'];
-  final Set<String> selectedWords = {};
+  late List<String> generatedPasswords = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _generateNewPasswords();
+  }
+
+  Future<void> _generateNewPasswords() async {
+    List<Future<String>> passwordFutures = List.generate(3, (_) => generateMemorablePassword());
+    List<String> newPasswords = await Future.wait(passwordFutures);
+
+    setState(() {
+      generatedPasswords = newPasswords;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,58 +35,46 @@ class _PassphraseWidgetState extends State<PassphraseWidget> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            spacing: 8.0,
-            runSpacing: 8.0,
-            children: words.map((word) {
-              final isSelected = selectedWords.contains(word);
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      selectedWords.remove(word);
-                    } else if (selectedWords.length < 3) {
-                      selectedWords.add(word);
-                    }
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.blue : Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    word,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+          // Mostra le password generate
+          ...generatedPasswords.map((password) {
+            return GestureDetector(
+              onTap: () {
+                widget.onSelected(password); // Passa la password selezionata
+                Navigator.of(context).pop(); // Chiude il dialog
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-          // Mostra in tempo reale le parole selezionate
-          Text(
-            selectedWords.join(' '),
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+                child: Text(
+                  password,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }).toList(),
+          const SizedBox(height: 12),
         ],
       ),
       actions: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(
-              onPressed: () {
-                widget.onSelected(selectedWords.join(' '));
-                Navigator.of(context).pop();
-              },
-              child: const Text('Confirm'),
+            // Bottone per rigenerare il set di password
+            TextButton.icon(
+              onPressed: _generateNewPasswords,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Generate new'),
             ),
-            const SizedBox(width: 16), // Spazio tra i due bottoni
+            // Bottone per chiudere il dialog
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('Cancel'),

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:io';
+import 'package:flutter/services.dart';
 
 // generatre password function, 
 //in input has to take lenght default 12, if digits default yes, 
@@ -25,21 +25,32 @@ String generatePassword({int length = 12, bool digits = true, bool specialChars 
 //if special character default yes, if number default yes
 // every word has to be capitalized
 // the numbers should be put between words and special characters at the end
-String generateMemorablePassword({String language = 'en', int length = 12, bool specialChars = true, bool numbers = true}) {
-  List<String> words = File('dictionaries/$language.txt').readAsLinesSync();
+Future<String> generateMemorablePassword({
+  String language = 'en',
+  int length = 12,
+  bool specialChars = true,
+  bool numbers = true,
+}) async {
+  // Carica il dizionario dagli asset
+  String content = await rootBundle.loadString('assets/dictionaries/$language.txt');
+  List<String> words = content.split('\n');
+
   Random random = Random.secure();
   String password = '';
   String specialCharset = '!@#\$%^&*()-_=+[]{}\\|;:\'",<>./?';
+
   while (password.length < length) {
-    String word = words[random.nextInt(words.length)];
+    String word = words[random.nextInt(words.length)].trim();
     word = word[0].toUpperCase() + word.substring(1);
     password += word;
     if (numbers && password.length < length) {
       password += random.nextInt(10).toString();
     }
   }
+
   if (specialChars) {
     password += specialCharset[random.nextInt(specialCharset.length)];
   }
+
   return password;
 }
