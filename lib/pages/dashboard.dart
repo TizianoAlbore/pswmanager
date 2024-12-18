@@ -55,7 +55,15 @@ class _DashboardPageState extends State<DashboardPage> {
     final args =
         ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
     final PasswordHolder temporizedPassword =
-        args?.temporizedPassword ?? PasswordHolder('', 1);
+        args?.temporizedPassword ?? PasswordHolder();
+
+    if (temporizedPassword.temporizedMasterPassphrase == null) {
+      Future.microtask(() {
+        Navigator.pop(context);
+        FirebaseAuth.instance.signOut();
+        Navigator.pushNamed(context, '/');
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +81,7 @@ class _DashboardPageState extends State<DashboardPage> {
           },
         ),
       ),
-      drawer: const DrawerWidget(),
+      drawer: DrawerWidget(temporizedPassword: temporizedPassword,),
       body: ValueListenableBuilder<ThemeData>(
         valueListenable: currentThemeNotifier,
         builder: (context, theme, child) {

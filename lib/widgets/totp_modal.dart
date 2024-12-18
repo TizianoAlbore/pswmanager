@@ -1,13 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pw_frontend/utils/encrypt/aes.dart';
 import '../utils/user_utils.dart';
 
 class AddTotpModal extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
+  final String temporizedPassword;
   Function onAdding;
-  AddTotpModal({super.key, required this.firestore, required this.userId, required this.onAdding});
+  AddTotpModal({super.key, required this.firestore, required this.userId, required this.onAdding, required this.temporizedPassword});
 
   @override
   AddTotpModalState createState() => AddTotpModalState();
@@ -33,14 +35,14 @@ class AddTotpModalState extends State<AddTotpModal> {
   void _submit() async{
     if (_formKey.currentState!.validate()) {
       try{
-        await addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, /* _algorithm,*/ _period, _digits, _secretController.text);
+        String secret = await MyEncrypt.encrypt(widget.temporizedPassword, _secretController.text);
+        await addTotp(widget.firestore, widget.userId, _nameController.text, _serviceController.text, _period, _digits, secret);
         Navigator.of(context).pop({
           'name': _nameController.text,
           'service': _serviceController.text,
-          'secret': _secretController.text,
+          'secret': _secretController,
           'period': _period,
           'digits': _digits,
-          // 'algorithm': _algorithm,
         });
         widget.onAdding();
         ScaffoldMessenger.of(context).showSnackBar(

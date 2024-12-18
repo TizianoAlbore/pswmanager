@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pw_frontend/utils/psw_holder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/update_masterPassphrase.dart';
 import '../widgets/drawer.dart';
@@ -10,6 +12,12 @@ class SettingsPage extends StatefulWidget {
 
   @override
   _SettingsPageState createState() => _SettingsPageState();
+}
+
+class SettingsArguments {
+  final PasswordHolder temporizedPassword;
+
+  SettingsArguments(this.temporizedPassword);
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -43,8 +51,28 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user ==null){
+      Future.microtask((){
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/');
+      });
+    }
+    
+    final args =
+        ModalRoute.of(context)?.settings.arguments as SettingsArguments?;
+    final PasswordHolder temporizedPassword =
+        args?.temporizedPassword ?? PasswordHolder();
+
+    if (temporizedPassword.temporizedMasterPassphrase == ''){
+      Navigator.pop(context);
+      FirebaseAuth.instance.signOut();
+      Navigator.pushNamed(context, '/');
+    }
+    
     return Scaffold(
-        drawer: const DrawerWidget(),
+        drawer: DrawerWidget(temporizedPassword: temporizedPassword),
         appBar: AppBar(
           title: const Text('Settings'),
           automaticallyImplyLeading: false,

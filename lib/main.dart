@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:pw_frontend/utils/psw_holder.dart';
 import 'firebase_options.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -130,6 +131,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final PasswordHolder passholder = PasswordHolder();
     return ValueListenableBuilder<ThemeData>(
       valueListenable: currentThemeNotifier,
       builder: (context, theme, child) {
@@ -138,7 +140,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: '/',
           routes: {
-            '/': (context) => const LoginPage(),
+            '/': (context) => LoginPage(passholder: passholder),
             '/signup': (context) => const SignupPage(),
             '/dashboard': (context) => const DashboardPage(),
             '/settings': (context) => const SettingsPage(),

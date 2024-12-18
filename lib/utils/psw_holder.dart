@@ -23,17 +23,18 @@ class PasswordHolder {
   /// The timer that clears the passphrase after a set duration.
   Timer? _timer;
 
-  final int time;
+  int time = 0;
 
   /// Creates a [PasswordHolder] with an initial passphrase and starts the timer.
-  PasswordHolder(this._temporizedMasterPassphrase, this.time) {
-    _startTimer();
+  PasswordHolder() {
+    //don't start the timer right away
+    //_startTimer();
   }
 
   /// Starts or resets the timer to clear the passphrase after [time] minutes.
   void _startTimer() {
     _timer?.cancel();
-    _timer = Timer(Duration(minutes: this.time), () {
+    _timer = Timer(Duration(minutes: time), () {
       _temporizedMasterPassphrase = null;
     });
   }
@@ -42,13 +43,18 @@ class PasswordHolder {
   String? get temporizedMasterPassphrase => _temporizedMasterPassphrase;
 
   /// Sets a new temporized master passphrase and resets the timer.
-  void set temporizedMasterPassphrase(String? passphrase,) {
+  void setTemporizedMasterPassphrase(String? passphrase,) {
     _temporizedMasterPassphrase = passphrase;
     _startTimer();
+  }
+
+  void setTimer(newTime) {
+    time = newTime;
   }
 
   /// Cancels the timer to avoid memory leaks. Should be called when the [PasswordHolder] is no longer needed.
   void dispose() {
     _timer?.cancel();
   }
+
 }

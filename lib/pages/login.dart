@@ -6,7 +6,8 @@ import 'package:pw_frontend/pages/dashboard.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  PasswordHolder passholder;
+  LoginPage({required this.passholder, super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -66,11 +67,12 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () {
         // Use the selected value
         final int timeWindow = _time.round();
-        final PasswordHolder _passwordHolder = PasswordHolder(_passwordController.text.trim(), timeWindow);
+        widget.passholder.setTimer(timeWindow);
+        widget.passholder.setTemporizedMasterPassphrase(_passwordController.text.trim());
         Navigator.pushNamed(
         context,
         '/dashboard',
-        arguments: DashboardArguments(_passwordHolder),
+        arguments: DashboardArguments(widget.passholder),
         ) ;
           },
           child: const Text('OK'),

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pw_frontend/pages/dashboard.dart';
+import 'package:pw_frontend/pages/settings.dart';
+import 'package:pw_frontend/pages/totp.dart';
+import 'package:pw_frontend/utils/psw_holder.dart';
 
 class DrawerWidget extends StatefulWidget {
-  const DrawerWidget({super.key});
+  final PasswordHolder temporizedPassword;
+  const DrawerWidget({super.key, required this.temporizedPassword});
 
   @override
   State<DrawerWidget> createState() => _DrawerWidget();
@@ -23,12 +28,12 @@ class _DrawerWidget extends State<DrawerWidget> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           const DrawerHeader(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Color(0xFF00796B), // Same blue as the dashboard header
             ),
             child:Text(
               'Welcome',
-              style: const TextStyle(
+              style: TextStyle(
                 color: Colors.white, // High contrast text for accessibility
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -43,7 +48,9 @@ class _DrawerWidget extends State<DrawerWidget> {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/dashboard');
+              Navigator.pushNamed(context,
+                                  '/dashboard',
+                                  arguments: DashboardArguments(widget.temporizedPassword));
             }
             },
           ),
@@ -55,7 +62,9 @@ class _DrawerWidget extends State<DrawerWidget> {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/totp');
+              Navigator.pushNamed(context,
+                                  '/totp',
+                                  arguments: TotpArguments(widget.temporizedPassword));
             }
             },
           ),
@@ -67,7 +76,9 @@ class _DrawerWidget extends State<DrawerWidget> {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);
-              Navigator.pushNamed(context, '/settings');
+              Navigator.pushNamed(context,
+                                  '/settings',
+                                  arguments: SettingsArguments(widget.temporizedPassword));
               }
             },
           ),

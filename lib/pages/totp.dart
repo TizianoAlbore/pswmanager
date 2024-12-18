@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:pw_frontend/utils/encrypt/aes.dart';
+import 'package:pw_frontend/utils/psw_holder.dart';
 import 'package:pw_frontend/utils/totp/totp2.dart';
 
 import 'package:pw_frontend/utils/user_utils.dart';
@@ -14,6 +16,11 @@ class TotpPage extends StatefulWidget {
 
   @override
   State<TotpPage> createState() => _TotpPageState();
+}
+
+class TotpArguments {
+  final PasswordHolder passholder;
+  TotpArguments(this.passholder);
 }
 
 class _TotpPageState extends State<TotpPage> {
@@ -47,6 +54,23 @@ class _TotpPageState extends State<TotpPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
 
+    if (user == null){
+      Future.microtask((){
+        Navigator.pop(context);
+        Navigator.pushNamed(context, '/');
+      });
+    }
+
+    final args =
+          ModalRoute.of(context)?.settings.arguments as TotpArguments?;
+    final PasswordHolder passwordHolder =
+          args?.passholder ?? PasswordHolder();
+
+    if (passwordHolder.temporizedMasterPassphrase == ''){
+      Navigator.pop(context);
+      FirebaseAuth.instance.signOut();
+      Navigator.pushNamed(context, '/');
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('TOTP Manager'),
@@ -63,7 +87,7 @@ class _TotpPageState extends State<TotpPage> {
           },
         ),
       ),
-      drawer: const DrawerWidget(),
+      drawer: DrawerWidget(temporizedPassword: passwordHolder),
       body: FutureBuilder(
         future: getUser(firestore, userId),
         builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -105,6 +129,7 @@ class _TotpPageState extends State<TotpPage> {
                                       builder: (BuildContext context) {
                                         return AddTotpModal(firestore: firestore,
                                                             userId: userId,
+                                                            temporizedPassword: passwordHolder.temporizedMasterPassphrase ?? '',
                                                             onAdding: () {
                                                               setState(() {
                                                               });
@@ -117,21 +142,33 @@ class _TotpPageState extends State<TotpPage> {
                                 ),
                               );
                             } else {
-                              Map<String, dynamic> totpEntry = user['totps'][totpEntries[index]];  
-                              Totp totp = Totp(secret: totpEntry['secret']!,
-                                              period: totpEntry['period'],
-                                              length: totpEntry['digits'],
+                              Map<String, dynamic> totpEntry = user['totps'][totpEntries[index]]; 
+                              return FutureBuilder<String>(
+                                future: MyEncrypt.decrypt(passwordHolder.temporizedMasterPassphrase ?? '', totpEntry['secret']),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    String secret = snapshot.data ?? '';
+                                    Totp totp = Totp(secret: secret,
+                                                    period: totpEntry['period'],
+                                                    length: totpEntry['digits'],
+                                    );
+                                    return TotpCard(totp: totp,
+                                                    remainingTimeNotifier: _remainingTimeNotifier,
+                                                    name: totpEntry['name'],
+                                                    service: totpEntry['service'],
+                                                    id: totpEntries[index],
+                                                    onDelete: () {
+                                                      setState(() {
+                                                        totpEntries.removeAt(index);
+                                                      });
+                                                    });
+                                  }
+                                },
                               );
-                              return TotpCard(totp: totp,
-                                              remainingTimeNotifier: _remainingTimeNotifier,
-                                              name: totpEntry['name'],
-                                              service: totpEntry['service'],
-                                              id: totpEntries[index],
-                                              onDelete: () {
-                                                setState(() {
-                                                  totpEntries.removeAt(index);
-                                                });
-                                              });
                             }
                           },
                         ),

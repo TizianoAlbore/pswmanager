@@ -67,7 +67,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Colors.yellow),
+                  const Icon(Icons.key, color: Colors.yellow),
                   const SizedBox(width: 8),
                   Text(
                     "Password Details",
@@ -84,7 +84,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Colors.yellow),
+                  const Icon(Icons.key, color: Colors.yellow),
                   const SizedBox(width: 8),
                   Text(
                     "Password Details",
@@ -109,7 +109,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.key, color: Colors.yellow),
+                      const Icon(Icons.key, color: Colors.yellow),
                       const SizedBox(width: 8),
                       Text(
                         "Password Details",
