@@ -41,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       await addUser(userCredential, _firestore, _emailController);
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      Navigator.pushReplacementNamed(context, '/');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Signup failed: ${e.toString()}')),
@@ -78,7 +78,6 @@ class _SignupPageState extends State<SignupPage> {
       // Naviga al dashboard
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
-      print('GitHub signup failed: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('GitHub signup failed: ${e.toString()}')),
       );
