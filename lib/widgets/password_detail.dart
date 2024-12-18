@@ -67,7 +67,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
+                  Icon(Icons.key, color: Colors.yellow),
                   const SizedBox(width: 8),
                   Text(
                     "Password Details",
@@ -84,7 +84,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
+                  Icon(Icons.key, color: Colors.yellow),
                   const SizedBox(width: 8),
                   Text(
                     "Password Details",
@@ -109,7 +109,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.key, color: Theme.of(context).colorScheme.secondary),
+                      Icon(Icons.key, color: Colors.yellow),
                       const SizedBox(width: 8),
                       Text(
                         "Password Details",
@@ -147,6 +147,7 @@ class _PasswordDetailState extends State<PasswordDetail> {
                   ],
                 ),
               ),
+              const SizedBox(height: 18),
               Flexible(
                 child: ListView.builder(
                   shrinkWrap: true,
@@ -165,10 +166,10 @@ class _PasswordDetailState extends State<PasswordDetail> {
                       child: Column(
                         children: [
                           Card(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Colors.transparent,
                             elevation: 0,
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
                               child: TextField(
                                 readOnly: !showEditIcons,
                                 obscureText: key == 'password' ? !isPasswordVisible : false,

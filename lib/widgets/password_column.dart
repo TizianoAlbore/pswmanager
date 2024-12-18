@@ -44,20 +44,20 @@ class _PasswordColumnState extends State<PasswordColumn> {
       future: getUser(widget.firestore, widget.userId),
       builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Column(
+          return const Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.lock, color: currentTheme.colorScheme.primary),
-                  const SizedBox(width: 8),
-                  const Text(
+                  Icon(Icons.lock, color: Colors.yellow),
+                  SizedBox(width: 8),
+                  Text(
                     "Group Passwords",
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              const CircularProgressIndicator(),
+              CircularProgressIndicator(),
             ],
           );
         } else if (snapshot.hasError) {
@@ -80,20 +80,21 @@ class _PasswordColumnState extends State<PasswordColumn> {
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.lock, color: currentTheme.colorScheme.primary),
-                    const SizedBox(width: 8),
-                    const Text(
+                    Icon(Icons.lock, color: Colors.yellow),
+                    SizedBox(width: 8),
+                    Text(
                       "Group Passwords",
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(height: 18),
               Expanded(
                 child: ListView.builder(
                   itemCount: sortedKeys.length + 1,
@@ -128,11 +129,11 @@ class _PasswordColumnState extends State<PasswordColumn> {
                         ListTile(
                           title: Text(
                             passwordData['title'],
-                            style: TextStyle(
+                            /*style: TextStyle(
                               color: (widget.selectedPasswordController.text == key)
-                                  ? Colors.white
+                                  ? Colors.green
                                   : widget.textColor,
-                            ),
+                            ),*/
                           ),
                           onTap: () {
                             setState(() {

@@ -85,6 +85,7 @@ class _TotpPageState extends State<TotpPage> {
                   return Column(
                     children: [
                       TotpProgressBar(remainingTimeNotifier: _remainingTimeNotifier),
+                      const SizedBox(height:20),
                       Expanded(
                         child: GridView.builder(
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

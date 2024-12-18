@@ -72,6 +72,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 18),
               Expanded(
                 child: ListView.builder(
                   itemCount: groups.length + 1,

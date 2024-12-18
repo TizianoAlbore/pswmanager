@@ -6,7 +6,7 @@ import 'package:pw_frontend/widgets/drawer.dart';
 import 'package:pw_frontend/widgets/group_column.dart';
 import 'package:pw_frontend/widgets/password_column.dart';
 import 'package:pw_frontend/widgets/password_detail.dart';
-import '../main.dart'; 
+import '../main.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -21,8 +21,10 @@ class DashboardArguments {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final TextEditingController _selectedGroupController = TextEditingController();
-  final TextEditingController _selectedPasswordController = TextEditingController();
+  final TextEditingController _selectedGroupController =
+      TextEditingController();
+  final TextEditingController _selectedPasswordController =
+      TextEditingController();
 
   // Callbacks for selected group and password
   callback_selectedGroup(newValue) {
@@ -30,6 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
       _selectedGroupController.text = newValue;
     });
   }
+
   callback_selectedPassword(newValue) {
     setState(() {
       _selectedPasswordController.text = newValue;
@@ -42,15 +45,17 @@ class _DashboardPageState extends State<DashboardPage> {
     final User? user = FirebaseAuth.instance.currentUser;
     final String userId = user?.uid ?? 'Unknown User ID';
 
-    if (user == null){
+    if (user == null) {
       Future.microtask(() {
         Navigator.pop(context);
-        Navigator.pushNamed(context, '/');   
+        Navigator.pushNamed(context, '/');
       });
     }
 
-    final args = ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
-    final PasswordHolder temporizedPassword = args?.temporizedPassword ?? PasswordHolder('', 1);
+    final args =
+        ModalRoute.of(context)?.settings.arguments as DashboardArguments?;
+    final PasswordHolder temporizedPassword =
+        args?.temporizedPassword ?? PasswordHolder('', 1);
 
     return Scaffold(
       appBar: AppBar(
@@ -73,56 +78,94 @@ class _DashboardPageState extends State<DashboardPage> {
         valueListenable: currentThemeNotifier,
         builder: (context, theme, child) {
           // Determine the text color based on the selected theme
-          final textColor = theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+          final textColor =
+              theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
           return Container(
-            color: theme.scaffoldBackgroundColor, // Dynamically change background color based on theme
+            height: 800,
+            color: theme
+                .scaffoldBackgroundColor, // Dynamically change background color based on theme
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // GroupColumn always visible
-                Expanded(
-                  flex: 1,
-                  child: GroupColumnPage(
-                    firestore: firestore,
-                    userId: userId,
-                    selectedGroupController: _selectedGroupController,
-                    callback_selectedGroup: callback_selectedGroup,
-                    textColor: textColor,  // Pass textColor to GroupColumnPage
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.circular(12), // Raggio di arrotondamento
+                    color: Colors.black12,
+                  ),
+                  child: SizedBox(
+                    width: 330,
+                    height: 450,
+                    child: GroupColumnPage(
+                      firestore: firestore,
+                      userId: userId,
+                      selectedGroupController: _selectedGroupController,
+                      callback_selectedGroup: callback_selectedGroup,
+                      textColor: textColor, // Pass textColor to GroupColumnPage
+                    ),
                   ),
                 ),
+                const SizedBox(width: 20),
 
                 // PasswordColumn displayed only if a group is selected
                 if (_selectedGroupController.text.isNotEmpty)
-                  Expanded(
-                    flex: 1,
-                    child: PasswordColumn(
-                      firestore: firestore,
-                      userId: userId,
-                      selectedGroupController: _selectedGroupController,
-                      selectedPasswordController: _selectedPasswordController,
-                      callback_selectedGroup: callback_selectedGroup,
-                      callback_selectedPassword: callback_selectedPassword,
-                      textColor: textColor,  // Pass textColor to PasswordColumn
-                      temporizedPassword: temporizedPassword.temporizedMasterPassphrase ?? '',
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(12), // Raggio di arrotondamento
+                      color: Colors.black12,
+                    ),
+                    child: SizedBox(
+                      width: 330,
+                      height: 450,
+                      child: PasswordColumn(
+                        firestore: firestore,
+                        userId: userId,
+                        selectedGroupController: _selectedGroupController,
+                        selectedPasswordController: _selectedPasswordController,
+                        callback_selectedGroup: callback_selectedGroup,
+                        callback_selectedPassword: callback_selectedPassword,
+                        textColor:
+                            textColor, // Pass textColor to PasswordColumn
+                        temporizedPassword:
+                            temporizedPassword.temporizedMasterPassphrase ?? '',
+                      ),
                     ),
                   ),
+                const SizedBox(width: 20),
 
                 // PasswordDetail displayed only if a password is selected
                 if (_selectedPasswordController.text.isNotEmpty)
-                  Expanded(
-                    flex: 1,
-                    child: PasswordDetail(
-                      firestore: firestore,
-                      userId: userId,
-                      selectedGroupController: _selectedGroupController,
-                      selectedPasswordController: _selectedPasswordController,
-                      updatePasswordList: () {
-                        setState(() {});
-                      },
-                      textColor: textColor,  // Pass textColor to PasswordDetail
-                      temporizedPassword: temporizedPassword.temporizedMasterPassphrase ?? '',
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(12), // Raggio di arrotondamento
+                      color: Colors.black12,
                     ),
-                  ),
+                    child: SizedBox(
+                      width: 330,
+                      height: 450,
+                      child: PasswordDetail(
+                        firestore: firestore,
+                        userId: userId,
+                        selectedGroupController: _selectedGroupController,
+                        selectedPasswordController: _selectedPasswordController,
+                        updatePasswordList: () {
+                          setState(() {});
+                        },
+                        textColor:
+                            textColor, // Pass textColor to PasswordDetail
+                        temporizedPassword:
+                            temporizedPassword.temporizedMasterPassphrase ?? '',
+                      ),
+                    ),
+                  )
               ],
             ),
           );
