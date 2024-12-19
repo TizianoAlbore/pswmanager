@@ -132,87 +132,155 @@ class _PasswordDetailState extends State<PasswordDetail> {
           _updateControllers(passwords);
 
           return Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.key, color: Colors.yellow),
-                    SizedBox(width: 8),
-                    Text(
-                      "Password Details",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 18),
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
-                    String key = orderedKeys[index];
-                    if (!controllers.containsKey(key)) {
-                      controllers[key] = TextEditingController(text: passwords[key] ?? '');
-                    }
-                    TextEditingController fieldController = controllers[key]!;
+  children: [
+    const Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.key, color: Colors.yellow),
+          SizedBox(width: 8),
+          Text(
+            "Password Details",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    ),
+    const SizedBox(height: 18),
+    Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        itemBuilder: (context, index) {
+          List<String> orderedKeys = ['title', 'username', 'password', 'Note'];
+          String key = orderedKeys[index];
+          if (!controllers.containsKey(key)) {
+            controllers[key] = TextEditingController(text: passwords[key] ?? '');
+          }
+          TextEditingController fieldController = controllers[key]!;
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 3.0),
-                      child: Column(
-                        children: [
-                          Card(
-                            color: Colors.transparent,
-                            elevation: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
-                              child: TextField(
-                                readOnly: !showEditIcons,
-                                obscureText: key == 'password' ? !isPasswordVisible : false,
-                                decoration: InputDecoration(
-                                  labelText: _capitalizeFirstLetter(key),
-                                  labelStyle: TextStyle(color: widget.textColor),
-                                  suffixIcon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (key == 'password')
-                                        IconButton(
-                                          icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-                                          onPressed: () {
-                                            setState(() {
-                                              isPasswordVisible = !isPasswordVisible;
-                                            });
-                                          },
-                                        ),
-                                      IconButton(
-                                        icon: Icon(Icons.copy, color: widget.textColor),
-                                        onPressed: () async {
-                                          await Clipboard.setData(ClipboardData(text: fieldController.text));
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Copied to clipboard')),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                controller: fieldController,
-                                style: TextStyle(color: widget.textColor),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3.0),
+            child: Column(
+              children: [
+                Card(
+                  color: Colors.transparent,
+                  elevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 8),
+                    child: TextField(
+                      readOnly: !showEditIcons,
+                      obscureText: key == 'password' ? !isPasswordVisible : false,
+                      decoration: InputDecoration(
+                        labelText: _capitalizeFirstLetter(key),
+                        labelStyle: TextStyle(color: widget.textColor),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (key == 'password')
+                              IconButton(
+                                icon: Icon(isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
+                                onPressed: () {
+                                  setState(() {
+                                    isPasswordVisible = !isPasswordVisible;
+                                  });
+                                },
                               ),
+                            IconButton(
+                              icon: Icon(Icons.copy, color: widget.textColor),
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: fieldController.text),
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Copied to clipboard')),
+                                );
+                              },
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    );
-                  },
+                      controller: fieldController,
+                      style: TextStyle(color: widget.textColor),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
+        },
+      ),
+    ),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (!showEditIcons)
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                showEditIcons = true; // Abilita modalità di modifica
+              });
+            },
+            child: const Text('Edit'),
+          ),
+        if (showEditIcons) ...[
+          ElevatedButton(
+            onPressed: () async {
+              // Recupera i valori aggiornati dai controller
+              String title = controllers['title']!.text;
+              String username = controllers['username']!.text;
+              String note = controllers['Note']!.text;
+              String password = await MyEncrypt.encrypt(
+                widget.temporizedPassword,
+                controllers['password']!.text,
+              );
+
+              try {
+                await updatePassword(
+                  widget.selectedPasswordController.text,
+                  title,
+                  username,
+                  password,
+                  note,
+                  widget.selectedGroupController.text,
+                  widget.firestore,
+                  widget.userId,
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password updated successfully!')),
+                );
+                widget.updatePasswordList(); // Aggiorna la lista
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error updating password: $e')),
+                );
+              }
+
+              setState(() {
+                showEditIcons = false; // Disabilita modalità di modifica
+              });
+            },
+            child: const Text('Confirm'),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                showEditIcons = false;
+                _updateControllers(passwords); // Ripristina valori originali
+              });
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+      ],
+    ),
+  ],
+);
         }
       },
     );
