@@ -75,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
         drawer: DrawerWidget(temporizedPassword: temporizedPassword),
         appBar: AppBar(
           title: const Text('Settings'),
+          centerTitle: true,
           automaticallyImplyLeading: false,
           leading: Builder(
             builder: (context) {

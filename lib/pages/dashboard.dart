@@ -68,6 +68,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
         leading: Builder(
           builder: (context) {
