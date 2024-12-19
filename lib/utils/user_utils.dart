@@ -91,6 +91,7 @@ Future<List<String>> getTotp(FirebaseFirestore firestore, String userId) async {
   }
   return totpEntries;
 }
+
 Future<Map<String, dynamic>> getUser(FirebaseFirestore firestore, String userId) async {
   Map<String, dynamic> data = {};
   await firestore.collection('users').doc(userId).get().then((DocumentSnapshot documentSnapshot) {

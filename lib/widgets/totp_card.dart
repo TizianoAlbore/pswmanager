@@ -32,18 +32,29 @@ class TotpCardState extends State<TotpCard> {
   late TextEditingController _nameController;
   late TextEditingController _serviceController;
 
+  void _updateTotpCode() {
+    if (mounted) {
+      setState(() {
+        _totpCode = widget.totp.generateTOTPCode();
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _totpCode = widget.totp.generateTOTPCode();
     _nameController = TextEditingController(text: widget.name);
     _serviceController = TextEditingController(text: widget.service);
+
+    widget.remainingTimeNotifier.addListener(_updateTotpCode);
   }
 
   @override
   void dispose() {
     _nameController.dispose();
     _serviceController.dispose();
+    widget.remainingTimeNotifier.removeListener(_updateTotpCode);
     super.dispose();
   }
 
@@ -54,9 +65,10 @@ class TotpCardState extends State<TotpCard> {
     );
   }
 
-  void _deleteTotp() async{
+  void _deleteTotp() async {
     try {
-      await deleteTotp(FirebaseFirestore.instance, FirebaseAuth.instance.currentUser!.uid, widget.id);
+      await deleteTotp(FirebaseFirestore.instance,
+          FirebaseAuth.instance.currentUser!.uid, widget.id);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('TOTP deleted')),
       );
@@ -92,13 +104,19 @@ class TotpCardState extends State<TotpCard> {
                     Expanded(
                       child: Row(
                         children: [
-                          const SizedBox(width: 48), // Empty space to balance the copy icon
+                          const SizedBox(
+                              width:
+                                  48), // Empty space to balance the copy icon
                           Expanded(
                             child: TextField(
-                              controller: TextEditingController(text: _totpCode.toString()),
+                              controller: TextEditingController(
+                                  text: _totpCode.toString()),
                               readOnly: true,
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: chipFontSize, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                              style: TextStyle(
+                                  fontSize: chipFontSize,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[800]),
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.teal[100],
@@ -125,9 +143,9 @@ class TotpCardState extends State<TotpCard> {
                     const Icon(Icons.person, color: Colors.teal),
                     const SizedBox(width: 8.0),
                     Text(
-                            widget.name,
-                            style: TextStyle(fontSize: fontSize),
-                          ),
+                      widget.name,
+                      style: TextStyle(fontSize: fontSize),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10.0),
@@ -137,9 +155,9 @@ class TotpCardState extends State<TotpCard> {
                     const Icon(Icons.business, color: Colors.teal),
                     const SizedBox(width: 8.0),
                     Text(
-                            widget.service,
-                            style: TextStyle(fontSize: fontSize),
-                          ),
+                      widget.service,
+                      style: TextStyle(fontSize: fontSize),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10.0),

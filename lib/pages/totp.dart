@@ -74,6 +74,7 @@ class _TotpPageState extends State<TotpPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('TOTP Manager'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
         leading: Builder(
           builder: (context) {

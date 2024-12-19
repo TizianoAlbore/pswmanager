@@ -132,8 +132,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text("🔒 Group 13 Password Manager"),
+        centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.teal,
       ),
       body: Center(
         child: Center(
