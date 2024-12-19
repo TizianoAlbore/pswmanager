@@ -26,61 +26,62 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        double _time = 10.0;
-        return AlertDialog(
-      title: const Text('Choose Time Window'),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Slider(
-            value: _time,
-            min: 10.0,
-            max: 60.0,
-            divisions: 6,
-            label: '${_time.round()} min',
-            onChanged: (double value) {
-          setState(() {
-            _time = value;
-          });
-            },
-          ),
-          Text(
-            '${_time.round()} minutes',
-          ),
-        ],
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          double _time = 10.0;
+          return AlertDialog(
+            title: const Text('Choose Time Window'),
+            content: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Slider(
+                      value: _time,
+                      min: 10.0,
+                      max: 60.0,
+                      divisions: 6,
+                      label: '${_time.round()} min',
+                      onChanged: (double value) {
+                        setState(() {
+                          _time = value;
+                        });
+                      },
+                    ),
+                    Text(
+                      '${_time.round()} minutes',
+                    ),
+                  ],
+                );
+              },
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Use the selected value
+                  final int timeWindow = _time.round();
+                  widget.passholder.setTimer(timeWindow);
+                  widget.passholder.setTemporizedMasterPassphrase(
+                      _passwordController.text.trim());
+                  Navigator.pushNamed(
+                    context,
+                    '/dashboard',
+                    arguments: DashboardArguments(widget.passholder),
+                  );
+                },
+                child: const Text('OK'),
+              ),
+            ],
           );
         },
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-        Navigator.of(context).pop();
-          },
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-        // Use the selected value
-        final int timeWindow = _time.round();
-        widget.passholder.setTimer(timeWindow);
-        widget.passholder.setTemporizedMasterPassphrase(_passwordController.text.trim());
-        Navigator.pushNamed(
-        context,
-        '/dashboard',
-        arguments: DashboardArguments(widget.passholder),
-        ) ;
-          },
-          child: const Text('OK'),
-        ),
-      ],
-        );
-      },
-    );
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: ${e.toString()}')),
@@ -134,15 +135,16 @@ class _LoginPageState extends State<LoginPage> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.teal,
       ),
-      body: Container(
-        color: const Color(0xFF1A1818),
+      body: Center(
         child: Center(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 25),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12), // Raggio di arrotondamento
-              border: Border.all(color: Colors.grey, width: 1), // Bordo opzionale
-            ), 
+              borderRadius:
+                  BorderRadius.circular(12), // Raggio di arrotondamento
+              border:
+                  Border.all(color: Colors.grey, width: 1), // Bordo opzionale
+            ),
             child: SizedBox(
               width: 370,
               child: Padding(
@@ -156,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -174,7 +175,9 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                _isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -189,12 +192,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF00796B),
-                          padding: const EdgeInsets.symmetric(horizontal: 50)
-                      ),
+                          padding: const EdgeInsets.symmetric(horizontal: 50)),
                       child: const Text(
                         'Login',
                         style: TextStyle(color: Colors.white),
@@ -202,45 +203,42 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 0), // Padding personalizzato
-                            ),
-                            onPressed: () {
-                              _googleLogin();
-                            },
-                            child: SvgPicture.asset(
-                              'assets/google.svg',
-                              height: 20,
-                              width: 20
-                            ),
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0), // Padding personalizzato
                           ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 0), // Padding personalizzato
-                            ),
-                            onPressed: () {
-                              _githubLogin();
-                            },
-                            child: SvgPicture.asset(
-                              'assets/github.svg',
-                              height: 20,
-                              width: 20
-                            ),
+                          onPressed: () {
+                            _googleLogin();
+                          },
+                          child: SvgPicture.asset('assets/google.svg',
+                              height: 20, width: 20),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0), // Padding personalizzato
                           ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 20), // Padding personalizzato
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/signup');
-                            },
-                            child: const Text('Don\'t have an account? Sign up'),
+                          onPressed: () {
+                            _githubLogin();
+                          },
+                          child: SvgPicture.asset('assets/github.svg',
+                              height: 20, width: 20),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20), // Padding personalizzato
                           ),
-                        ],
-                      ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/signup');
+                          },
+                          child: const Text('Don\'t have an account? Sign up'),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
