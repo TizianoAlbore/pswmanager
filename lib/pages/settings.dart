@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pw_frontend/utils/psw_holder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../utils/update_masterPassphrase.dart';
+import '../utils/update_master_passphrase.dart';
 import '../widgets/drawer.dart';
 import '../main.dart'; // Import for theme updates
 import 'theme_helper.dart';

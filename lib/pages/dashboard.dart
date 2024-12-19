@@ -134,6 +134,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: PasswordColumn(
                         firestore: firestore,
                         userId: userId,
+                        selectedGroupText: _selectedGroupController.text,
                         selectedGroupController: _selectedGroupController,
                         selectedPasswordController: _selectedPasswordController,
                         callback_selectedGroup: callback_selectedGroup,

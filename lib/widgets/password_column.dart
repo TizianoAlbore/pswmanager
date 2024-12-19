@@ -8,6 +8,7 @@ import '../utils/user_utils.dart';
 class PasswordColumn extends StatefulWidget {
   final FirebaseFirestore firestore;
   final String userId;
+  final String selectedGroupText;
   final TextEditingController selectedGroupController;
   final TextEditingController selectedPasswordController;
   Function callback_selectedGroup;
@@ -19,6 +20,7 @@ class PasswordColumn extends StatefulWidget {
     super.key,
     required this.firestore,
     required this.userId,
+    required this.selectedGroupText,
     required this.selectedGroupController,
     required this.selectedPasswordController,
     required this.callback_selectedGroup,
@@ -44,20 +46,20 @@ class _PasswordColumnState extends State<PasswordColumn> {
       future: getUser(widget.firestore, widget.userId),
       builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Column(
+          return Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.lock, color: Colors.yellow),
-                  SizedBox(width: 8),
+                  const Icon(Icons.lock, color: Colors.yellow),
+                  const SizedBox(width: 8),
                   Text(
-                    "Group Passwords",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    "${widget.selectedGroupText} Passwords",
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              CircularProgressIndicator(),
+              const CircularProgressIndicator(),
             ],
           );
         } else if (snapshot.hasError) {
@@ -80,21 +82,23 @@ class _PasswordColumnState extends State<PasswordColumn> {
 
           return Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.lock, color: Colors.yellow),
-                    SizedBox(width: 8),
+                    const Icon(Icons.lock, color: Colors.yellow),
+                    const SizedBox(width: 8),
                     Text(
-                      "Group Passwords",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      "${widget.selectedGroupText} Passwords",
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 18),
+
+              // Modal that adds new password details
               Expanded(
                 child: ListView.builder(
                   itemCount: sortedKeys.length + 1,
@@ -111,6 +115,7 @@ class _PasswordColumnState extends State<PasswordColumn> {
                                 return CustomModal(
                                   firestore: widget.firestore,
                                   userId: widget.userId,
+                                  selectedGroupText: widget.selectedGroupText,
                                   callbackUpdate: callbackUpdate,
                                   temporizedPassword: widget.temporizedPassword,
                                 );
@@ -141,7 +146,7 @@ class _PasswordColumnState extends State<PasswordColumn> {
                             });
                           },
                           selected: widget.selectedPasswordController.text == key,
-                          selectedTileColor: currentTheme.colorScheme.surfaceVariant,
+                          selectedTileColor: currentTheme.colorScheme.surfaceContainerHigh,
                           trailing: IconButton(
                             icon: const Icon(Icons.remove_rounded),
                             color: Colors.red[400],

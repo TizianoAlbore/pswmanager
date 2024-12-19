@@ -153,6 +153,7 @@ Future<Map<String, String>> getPasswordDetail(FirebaseFirestore firestore, Strin
   }
   return passwdDetail;
 }
+
 //add password entry to firestore
 Future<void> addPassword(String title, String username, String cryptPassword, String note, String group, FirebaseFirestore firestore, String userId) async {
   DocumentSnapshot userCollection = await firestore.collection('users').doc(userId).get();
