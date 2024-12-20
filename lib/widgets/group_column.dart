@@ -193,7 +193,7 @@ class _GroupColumnPageState extends State<GroupColumnPage> {
             });
           },
           selected: widget.selectedGroupController.text == groups[index],
-          selectedTileColor: Theme.of(context).colorScheme.surfaceVariant,
+          selectedTileColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           trailing: IconButton(
             icon: const Icon(Icons.remove_rounded),
             color: Colors.red[400],

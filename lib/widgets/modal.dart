@@ -52,6 +52,7 @@ class _CustomModalState extends State<CustomModal> {
         widget.selectedGroupText; // Inizializza il valore del controller
   }
 
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Add New Entry'),

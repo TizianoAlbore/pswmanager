@@ -4,7 +4,7 @@ import '../utils/password_utils.dart'; // Import della funzione
 class PassphraseWidget extends StatefulWidget {
   final Function(String) onSelected;
 
-  const PassphraseWidget({Key? key, required this.onSelected}) : super(key: key);
+  const PassphraseWidget({super.key, required this.onSelected});
 
   @override
   State<PassphraseWidget> createState() => _PassphraseWidgetState();
@@ -60,7 +60,7 @@ class _PassphraseWidgetState extends State<PassphraseWidget> {
                 ),
               ),
             );
-          }).toList(),
+          }),
           const SizedBox(height: 12),
         ],
       ),

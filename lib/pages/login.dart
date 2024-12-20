@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          double _time = 10.0;
+          double time = 10.0;
           return AlertDialog(
             title: const Text('Choose Time Window'),
             content: StatefulBuilder(
@@ -38,19 +38,19 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Slider(
-                      value: _time,
+                      value: time,
                       min: 10.0,
                       max: 60.0,
                       divisions: 6,
-                      label: '${_time.round()} min',
+                      label: '${time.round()} min',
                       onChanged: (double value) {
                         setState(() {
-                          _time = value;
+                          time = value;
                         });
                       },
                     ),
                     Text(
-                      '${_time.round()} minutes',
+                      '${time.round()} minutes',
                     ),
                   ],
                 );
@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () {
                   // Use the selected value
-                  final int timeWindow = _time.round();
+                  final int timeWindow = time.round();
                   widget.passholder.setTimer(timeWindow);
                   widget.passholder.setTemporizedMasterPassphrase(
                       _passwordController.text.trim());

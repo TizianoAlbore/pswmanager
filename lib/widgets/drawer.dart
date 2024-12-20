@@ -44,7 +44,7 @@ class _DrawerWidget extends State<DrawerWidget> {
             leading: const Icon(Icons.home),
             title: const Text('Dashboard'),
             onTap: () {
-              if (ModalRoute.of(context)?.settings?.name == '/dashboard') {
+              if (ModalRoute.of(context)?.settings.name == '/dashboard') {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);
@@ -58,7 +58,7 @@ class _DrawerWidget extends State<DrawerWidget> {
             leading: const Icon(Icons.qr_code),
             title: const Text('TOTP Manager'),
             onTap: () {
-              if (ModalRoute.of(context)?.settings?.name == '/totp') {
+              if (ModalRoute.of(context)?.settings.name == '/totp') {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);
@@ -72,7 +72,7 @@ class _DrawerWidget extends State<DrawerWidget> {
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              if (ModalRoute.of(context)?.settings?.name == '/settings') {
+              if (ModalRoute.of(context)?.settings.name == '/settings') {
                 Navigator.pop(context);
               }else{
               Navigator.pop(context);

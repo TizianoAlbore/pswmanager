@@ -17,9 +17,7 @@ Future<void> changePassword(
         password: oldPassword,
       );
       await user.reauthenticateWithCredential(cred);
-      print("reauthenticated successfully");
     } catch (e) {
-      print("Error : $e");
       var snackbar = const SnackBar(
         content: Text("Old password is incorrect!"),
         behavior: SnackBarBehavior.floating,
@@ -29,7 +27,6 @@ Future<void> changePassword(
     }
 
     // update all crypted instances in the database
-    print("Re-encrypting entries with new masterpassword...");
     try {
       // Recupera i dati dell'utente
       DocumentSnapshot userDoc =
@@ -62,25 +59,19 @@ Future<void> changePassword(
                 'groups.$group.$id.password': reEncryptedPassword,
               });
 
-              print("Password for $group->$id updated successfully.");
             } catch (e) {
-              print("Failed to re-encrypt password for $group->$id: $e");
               return;
             }
           } else {
-            print("No password found for $group->$id");
           }
         }
       }
 
-      print("Re-encryption completed.");
     } catch (e) {
-      print("Error during re-encryption: $e");
       return;
     }
 
     // update TOTPs
-    print("Re-encrypting TOTP secrets with new masterpassword...");
     try {
       // Recupera i dati dell'utente
       DocumentSnapshot userDoc =
@@ -110,27 +101,20 @@ Future<void> changePassword(
               'totps.$id.secret': reEncryptedSecret,
             });
 
-            print("TOTP secret for $id updated successfully.");
           } catch (e) {
-            print("Failed to re-encrypt TOTP secret for $id: $e");
             return;
           }
         } else {
-          print("No secret found for TOTP $id");
         }
       }
 
-      print("Re-encryption of TOTP secrets completed.");
     } catch (e) {
-      print("Error during re-encryption: $e");
       return;
     }
 
     // Update password if re-authentication is successful
-    print("updating password...");
     try {
       await user.updatePassword(newPassword);
-      print("Password updated successfully.");
       var snackbar = const SnackBar(
         content: Text("Password updated successfully."),
         behavior: SnackBarBehavior.floating,
@@ -139,7 +123,6 @@ Future<void> changePassword(
       Navigator.of(context).pop();
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
-      print("Error : $e");
       var snackbar = const SnackBar(
         content: Text("Error updating password!"),
         behavior: SnackBarBehavior.floating,

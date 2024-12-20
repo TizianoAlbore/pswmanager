@@ -9,7 +9,6 @@ import 'pages/signup.dart';
 import 'pages/dashboard.dart';
 import 'pages/settings.dart';
 import 'pages/totp.dart';
-import 'pages/theme_helper.dart';
 
 // Global ValueNotifier for dynamic theme updates
 final ValueNotifier<ThemeData> currentThemeNotifier = ValueNotifier<ThemeData>(

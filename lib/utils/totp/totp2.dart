@@ -33,7 +33,7 @@ class Totp {
     var secretList = base32.decode(secret);
     var timebytes = _int2bytes(time);
 
-    var hmac = new Hmac(sha1, secretList);
+    var hmac = Hmac(sha1, secretList);
     var hash = hmac.convert(timebytes).bytes;
 
     int offset = hash[hash.length - 1] & 0xf;
@@ -47,7 +47,7 @@ class Totp {
   }
 
   static String randomSecret() {
-    var rand = new Random();
+    var rand = Random();
     var bytes = <int>[];
 
     for(int i = 0; i < 10; i++) {
@@ -59,7 +59,7 @@ class Totp {
 
   static String _dec2hex(int s) {
     var st = s.round().toRadixString(16);
-    return (st.length % 2 == 0) ? st : '0'+st;
+    return (st.length % 2 == 0) ? st : '0$st';
   }
 
   static String _leftpad(String str, int len, String pad) {
